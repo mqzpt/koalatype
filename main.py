@@ -110,7 +110,7 @@ def _build_parser(word_packs: dict[str, WordPack]) -> argparse.ArgumentParser:
     parser.add_argument(
         "--words",
         type=int,
-        default=25,
+        default=30,
         help="Number of words to generate.",
     )
     parser.add_argument(
@@ -164,20 +164,36 @@ def _layout_prompt(prompt: str, width: int) -> tuple[list[str], list[tuple[int, 
     row = 0
     col = 0
     current_line: list[str] = []
-
-    for ch in prompt:
-        if col >= width:
+    
+    words = prompt.split(" ")
+    
+    for word_idx, word in enumerate(words):
+        # Check if word fits on current line
+        word_len = len(word)
+        space_len = 1 if col > 0 else 0  # Space before word (unless at start of line)
+        
+        if col > 0 and col + space_len + word_len > width:
+            # Word doesn't fit, move to next line
             lines.append("".join(current_line))
             current_line = []
             row += 1
             col = 0
-        current_line.append(ch)
-        positions.append((row, col))
-        col += 1
-
+        
+        # Add space before word (if not at start of line)
+        if col > 0:
+            current_line.append(" ")
+            positions.append((row, col))
+            col += 1
+        
+        # Add word
+        for ch in word:
+            current_line.append(ch)
+            positions.append((row, col))
+            col += 1
+    
     if current_line or not lines:
         lines.append("".join(current_line))
-
+    
     return lines, positions
 
 
@@ -227,10 +243,14 @@ def _run_curses_test(prompt: str, duration_seconds: float) -> tuple[str, float]:
 
             elapsed = time.perf_counter() - start_time
             remaining = max(duration_seconds - elapsed, 0.0)
+            
+            title = "🐨 koalatype 🐨"
+            stdscr.addstr(0, 0, title[: width - 1], curses.color_pair(3))
+            
             header = f"Time left: {remaining:4.1f}s"
-            stdscr.addstr(0, 0, header[: width - 1], curses.color_pair(3))
+            stdscr.addstr(1, 0, header[: width - 1], curses.color_pair(3))
 
-            base_row = 2
+            base_row = 3
             max_lines = max(0, height - base_row - 2)
             for idx, line in enumerate(prompt_lines[:max_lines]):
                 stdscr.addstr(base_row + idx, 0, line)
@@ -288,6 +308,14 @@ def _run_curses_test(prompt: str, duration_seconds: float) -> tuple[str, float]:
             if key == curses.KEY_RESIZE:
                 continue
             if key == " ":
+                # Check if we just completed the last word correctly
+                if word_index == len(prompt_words) - 1:
+                    typed_word = "".join(typed_words[word_index])
+                    expected_word = prompt_words[word_index]
+                    if typed_word == expected_word:
+                        # early exit iff words completed correctly
+                        break
+                
                 if word_index < len(prompt_words) - 1:
                     word_index += 1
                     if len(typed_words) <= word_index:
@@ -313,15 +341,29 @@ def main() -> None:
         return
 
     pack = word_packs[args.pack]
-    prompt = _generate_prompt(pack, args.words, args.seed)
+    
+    while True:
+        prompt = _generate_prompt(pack, args.words, args.seed)
 
-    typed, elapsed = _run_curses_test(prompt, duration_seconds=30.0)
+        typed, elapsed = _run_curses_test(prompt, duration_seconds=30.0)
 
-    results = _score(prompt, typed, elapsed)
-    print("\nResults:")
-    print(f"- WPM: {results['wpm']:.1f}")
-    print(f"- Accuracy: {results['accuracy']:.1f}%")
-    print(f"- Correct words: {int(results['correct'])}/{int(results['total'])}")
+        results = _score(prompt, typed, elapsed)
+        print("\nResults:")
+        print(f"- WPM: {results['wpm']:.1f}")
+        print(f"- Accuracy: {results['accuracy']:.1f}%")
+        print(f"- Correct words: {int(results['correct'])}/{int(results['total'])}")
+        
+        while True:
+            choice = input("\Enter 'r' to repeat, 'n' for new test, or 'q' to quit: ").lower().strip()
+            if choice == "r":
+                break
+            elif choice == "n":
+                prompt = _generate_prompt(pack, args.words, None)
+                break
+            elif choice == "q":
+                return
+            else:
+                print("Invalid choice. Please enter 'r', 'n', or 'q'.")
 
 
 if __name__ == "__main__":
