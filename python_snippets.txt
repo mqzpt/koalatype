@@ -1,0 +1,387 @@
+# Two Sum
+def two_sum(nums, target):
+    seen = {}
+    for i, num in enumerate(nums):
+        diff = target - num
+        if diff in seen:
+            return [seen[diff], i]
+        seen[num] = i
+---
+# Valid Parentheses
+def is_valid(s):
+    stack = []
+    pairs = {"(": ")", "{": "}", "[": "]"}
+    for ch in s:
+        if ch in pairs:
+            stack.append(pairs[ch])
+        elif not stack or stack.pop() != ch:
+            return False
+    return not stack
+---
+# Best Time to Buy and Sell Stock
+def max_profit(prices):
+    min_price = float("inf")
+    profit = 0
+    for price in prices:
+        min_price = min(min_price, price)
+        profit = max(profit, price - min_price)
+    return profit
+---
+# Maximum Subarray (Kadane)
+def max_sub_array(nums):
+    curr = best = nums[0]
+    for num in nums[1:]:
+        curr = max(num, curr + num)
+        best = max(best, curr)
+    return best
+---
+# Climbing Stairs
+def climb_stairs(n):
+    if n <= 2:
+        return n
+    a, b = 1, 2
+    for _ in range(3, n + 1):
+        a, b = b, a + b
+    return b
+---
+# Valid Palindrome
+def is_palindrome(s):
+    chars = [c.lower() for c in s if c.isalnum()]
+    return chars == chars[::-1]
+---
+# Contains Duplicate
+def contains_duplicate(nums):
+    return len(nums) != len(set(nums))
+---
+# Single Number
+def single_number(nums):
+    result = 0
+    for num in nums:
+        result ^= num
+    return result
+---
+# Reverse Linked List
+def reverse_list(head):
+    prev = None
+    curr = head
+    while curr:
+        nxt = curr.next
+        curr.next = prev
+        prev = curr
+        curr = nxt
+    return prev
+---
+# Merge Two Sorted Lists
+def merge_two_lists(l1, l2):
+    dummy = node = ListNode(0)
+    while l1 and l2:
+        if l1.val <= l2.val:
+            node.next = l1
+            l1 = l1.next
+        else:
+            node.next = l2
+            l2 = l2.next
+        node = node.next
+    node.next = l1 or l2
+    return dummy.next
+---
+# Binary Search
+def binary_search(nums, target):
+    lo, hi = 0, len(nums) - 1
+    while lo <= hi:
+        mid = (lo + hi) // 2
+        if nums[mid] == target:
+            return mid
+        elif nums[mid] < target:
+            lo = mid + 1
+        else:
+            hi = mid - 1
+    return -1
+---
+# Maximum Depth of Binary Tree
+def max_depth(root):
+    if not root:
+        return 0
+    return 1 + max(max_depth(root.left), max_depth(root.right))
+---
+# Invert Binary Tree
+def invert_tree(root):
+    if not root:
+        return None
+    root.left, root.right = invert_tree(root.right), invert_tree(root.left)
+    return root
+---
+# Valid Anagram
+def is_anagram(s, t):
+    if len(s) != len(t):
+        return False
+    count = {}
+    for c in s:
+        count[c] = count.get(c, 0) + 1
+    for c in t:
+        count[c] = count.get(c, 0) - 1
+        if count[c] < 0:
+            return False
+    return True
+---
+# Move Zeroes
+def move_zeroes(nums):
+    pos = 0
+    for i in range(len(nums)):
+        if nums[i] != 0:
+            nums[pos], nums[i] = nums[i], nums[pos]
+            pos += 1
+---
+# Linked List Cycle
+def has_cycle(head):
+    slow = fast = head
+    while fast and fast.next:
+        slow = slow.next
+        fast = fast.next.next
+        if slow is fast:
+            return True
+    return False
+---
+# Longest Common Prefix
+def longest_prefix(strs):
+    if not strs:
+        return ""
+    prefix = strs[0]
+    for s in strs[1:]:
+        while not s.startswith(prefix):
+            prefix = prefix[:-1]
+            if not prefix:
+                return ""
+    return prefix
+---
+# Roman to Integer
+def roman_to_int(s):
+    vals = {"I": 1, "V": 5, "X": 10, "L": 50, "C": 100, "D": 500, "M": 1000}
+    total = 0
+    for i in range(len(s)):
+        if i + 1 < len(s) and vals[s[i]] < vals[s[i + 1]]:
+            total -= vals[s[i]]
+        else:
+            total += vals[s[i]]
+    return total
+---
+# Product of Array Except Self
+def product_except_self(nums):
+    n = len(nums)
+    result = [1] * n
+    prefix = 1
+    for i in range(n):
+        result[i] = prefix
+        prefix *= nums[i]
+    suffix = 1
+    for i in range(n - 1, -1, -1):
+        result[i] *= suffix
+        suffix *= nums[i]
+    return result
+---
+# Group Anagrams
+def group_anagrams(strs):
+    groups = {}
+    for s in strs:
+        key = tuple(sorted(s))
+        groups.setdefault(key, []).append(s)
+    return list(groups.values())
+---
+# Coin Change
+def coin_change(coins, amount):
+    dp = [float("inf")] * (amount + 1)
+    dp[0] = 0
+    for coin in coins:
+        for x in range(coin, amount + 1):
+            dp[x] = min(dp[x], dp[x - coin] + 1)
+    return dp[amount] if dp[amount] != float("inf") else -1
+---
+# Longest Substring Without Repeating Characters
+def length_of_longest(s):
+    seen = {}
+    start = best = 0
+    for i, ch in enumerate(s):
+        if ch in seen and seen[ch] >= start:
+            start = seen[ch] + 1
+        seen[ch] = i
+        best = max(best, i - start + 1)
+    return best
+---
+# 3Sum
+def three_sum(nums):
+    nums.sort()
+    result = []
+    for i in range(len(nums) - 2):
+        if i > 0 and nums[i] == nums[i - 1]:
+            continue
+        lo, hi = i + 1, len(nums) - 1
+        while lo < hi:
+            total = nums[i] + nums[lo] + nums[hi]
+            if total < 0:
+                lo += 1
+            elif total > 0:
+                hi -= 1
+            else:
+                result.append([nums[i], nums[lo], nums[hi]])
+                while lo < hi and nums[lo] == nums[lo + 1]:
+                    lo += 1
+                lo += 1
+                hi -= 1
+    return result
+---
+# LRU Cache
+class LRUCache:
+    def __init__(self, capacity):
+        self.cap = capacity
+        self.cache = OrderedDict()
+
+    def get(self, key):
+        if key not in self.cache:
+            return -1
+        self.cache.move_to_end(key)
+        return self.cache[key]
+
+    def put(self, key, value):
+        if key in self.cache:
+            self.cache.move_to_end(key)
+        self.cache[key] = value
+        if len(self.cache) > self.cap:
+            self.cache.popitem(last=False)
+---
+# Merge Intervals
+def merge_intervals(intervals):
+    intervals.sort(key=lambda x: x[0])
+    merged = [intervals[0]]
+    for start, end in intervals[1:]:
+        if start <= merged[-1][1]:
+            merged[-1][1] = max(merged[-1][1], end)
+        else:
+            merged.append([start, end])
+    return merged
+---
+# Number of Islands (BFS)
+def num_islands(grid):
+    if not grid:
+        return 0
+    rows, cols = len(grid), len(grid[0])
+    count = 0
+    for r in range(rows):
+        for c in range(cols):
+            if grid[r][c] == "1":
+                count += 1
+                queue = deque([(r, c)])
+                grid[r][c] = "0"
+                while queue:
+                    row, col = queue.popleft()
+                    for dr, dc in [(1, 0), (-1, 0), (0, 1), (0, -1)]:
+                        nr, nc = row + dr, col + dc
+                        if 0 <= nr < rows and 0 <= nc < cols and grid[nr][nc] == "1":
+                            grid[nr][nc] = "0"
+                            queue.append((nr, nc))
+    return count
+---
+# Word Search (Backtracking)
+def exist(board, word):
+    rows, cols = len(board), len(board[0])
+    def dfs(r, c, i):
+        if i == len(word):
+            return True
+        if r < 0 or r >= rows or c < 0 or c >= cols:
+            return False
+        if board[r][c] != word[i]:
+            return False
+        tmp = board[r][c]
+        board[r][c] = "#"
+        found = (dfs(r + 1, c, i + 1) or dfs(r - 1, c, i + 1) or
+                 dfs(r, c + 1, i + 1) or dfs(r, c - 1, i + 1))
+        board[r][c] = tmp
+        return found
+    for r in range(rows):
+        for c in range(cols):
+            if dfs(r, c, 0):
+                return True
+    return False
+---
+# Top K Frequent Elements
+def top_k_frequent(nums, k):
+    count = Counter(nums)
+    buckets = [[] for _ in range(len(nums) + 1)]
+    for num, freq in count.items():
+        buckets[freq].append(num)
+    result = []
+    for i in range(len(buckets) - 1, 0, -1):
+        for num in buckets[i]:
+            result.append(num)
+            if len(result) == k:
+                return result
+---
+# Trapping Rain Water
+def trap(height):
+    left, right = 0, len(height) - 1
+    left_max = right_max = water = 0
+    while left < right:
+        if height[left] < height[right]:
+            left_max = max(left_max, height[left])
+            water += left_max - height[left]
+            left += 1
+        else:
+            right_max = max(right_max, height[right])
+            water += right_max - height[right]
+            right -= 1
+    return water
+---
+# Serialize and Deserialize Binary Tree
+class Codec:
+    def serialize(self, root):
+        vals = []
+        def dfs(node):
+            if not node:
+                vals.append("#")
+                return
+            vals.append(str(node.val))
+            dfs(node.left)
+            dfs(node.right)
+        dfs(root)
+        return ",".join(vals)
+
+    def deserialize(self, data):
+        vals = iter(data.split(","))
+        def dfs():
+            val = next(vals)
+            if val == "#":
+                return None
+            node = TreeNode(int(val))
+            node.left = dfs()
+            node.right = dfs()
+            return node
+        return dfs()
+---
+# Implement Trie
+class Trie:
+    def __init__(self):
+        self.children = {}
+        self.is_end = False
+
+    def insert(self, word):
+        node = self
+        for ch in word:
+            if ch not in node.children:
+                node.children[ch] = Trie()
+            node = node.children[ch]
+        node.is_end = True
+
+    def search(self, word):
+        node = self
+        for ch in word:
+            if ch not in node.children:
+                return False
+            node = node.children[ch]
+        return node.is_end
+
+    def starts_with(self, prefix):
+        node = self
+        for ch in prefix:
+            if ch not in node.children:
+                return False
+            node = node.children[ch]
+        return True
