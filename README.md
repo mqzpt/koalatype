@@ -2,7 +2,7 @@
 
 Offline CLI typing test. Pure Python, zero dependencies, runs in any terminal.
 
-The killer feature: **code mode**. Type real Python solutions (LeetCode editorial-style) with proper indentation and line breaks — not just random keywords mashed together.
+Includes a **code mode** where you type real functions with proper indentation and line breaks — not just random keywords.
 
 ## Install
 
@@ -15,15 +15,18 @@ Requires Python 3.11+.
 ## Usage
 
 ```bash
-koalatype                                    # english words, 30s
+koalatype                                    # interactive setup menu
 koalatype --pack python-code                 # real Python snippets with indentation
-koalatype --pack python-code --zen           # no timer, Esc when done
-koalatype --pack rust --time 60              # 60 second test
+koalatype --pack javascript-code --zen       # no timer, Esc when done
+koalatype --pack java-code --time 60         # 60 second test
+koalatype --pack rust --time 60              # Rust keywords
 koalatype --difficulty hard --time 120       # long words only
 koalatype --file ~/mywords.txt --words 20    # custom word list
 koalatype --list                             # show all packs
 koalatype --history                          # past results + personal bests
 ```
+
+Running `koalatype` with no arguments launches an interactive menu where you pick mode, language, duration, word count, and difficulty. Supports arrow keys and vim bindings (h/j/k/l).
 
 ## Word Packs
 
@@ -31,8 +34,11 @@ koalatype --history                          # past results + personal bests
 |------|-------------|
 | `english-1000` | Common English words (default) |
 | `python` | Python keywords and builtins |
-| `python-code` | Real Python code — 31 LeetCode solutions with indentation |
+| `python-code` | Real Python code — 94 snippets |
 | `javascript` | JavaScript keywords |
+| `javascript-code` | Real JavaScript code — 92 snippets |
+| `java` | Java keywords |
+| `java-code` | Real Java code — 107 snippets |
 | `rust` | Rust keywords |
 | `go` | Go keywords |
 | `sql` | SQL keywords |
@@ -43,7 +49,7 @@ koalatype --history                          # past results + personal bests
 
 ## Code Mode
 
-`python-code` is different from the other packs. Instead of random words, you type real functions:
+Code packs (`python-code`, `javascript-code`, `java-code`) have you type real functions instead of random words:
 
 ```
 def two_sum(nums, target):
@@ -58,12 +64,14 @@ def two_sum(nums, target):
 - **Space** advances to the next token within a line
 - **Enter** moves to the next line (indentation is handled for you)
 - **Backspace** goes back through chars, words, and up to previous lines
+- **Esc** exits the test early and scores what you've typed
 
-31 snippets covering classic problems: Two Sum, Valid Parentheses, Binary Search, LRU Cache, Merge Intervals, Trie, Number of Islands, Trapping Rain Water, etc.
+293 code snippets across three languages covering sorting, searching, dynamic programming, graph algorithms, data structures, and more.
 
 ## Features
 
-- **Timed or zen mode** — pick 15/30/60/120s or `--zen` for no timer (Esc to finish)
+- **Interactive setup** — run with no args to pick mode, language, and settings via a menu
+- **Timed or zen mode** — pick 15/30/60/120s or zen (no timer, Esc to finish)
 - **Timer starts on first keypress** — no time lost reading the prompt
 - **Live stats** — WPM, raw WPM (keystroke-based), accuracy, backspace count, most-mistyped characters
 - **Persistent history** — results saved to `~/.koalatype/history.json`, view with `--history`
@@ -84,14 +92,17 @@ difficulty = "medium"
 
 ## Future
 
-- More code packs: JavaScript, Rust, Go, SQL snippets with real code (not just keywords)
-- Quote mode — type real sentences and paragraphs
+- More code packs: Rust, Go, TypeScript
+- Quote mode
 - Themes / color schemes
-- Live WPM sparkline graph during the test
-- Progressive difficulty — words get harder as you go
-- Multiplayer ghost mode — race against your previous best
-- Persistent leaderboard
+- Multiplayer
 
 ## Credits
 
-English word list from [powerlanguage/word-lists](https://github.com/powerlanguage/word-lists/blob/master/1000-most-common-words.txt).
+**Word lists:**
+- English word list from [powerlanguage/word-lists](https://github.com/powerlanguage/word-lists/blob/master/1000-most-common-words.txt)
+
+**Code snippets sourced from:**
+- Python — LeetCode editorial solutions, [TheAlgorithms/Python](https://github.com/TheAlgorithms/Python)
+- JavaScript — [trekhleb/javascript-algorithms](https://github.com/trekhleb/javascript-algorithms), [30secondsofcode.org](https://www.30secondsofcode.org), [TheAlgorithms/JavaScript](https://github.com/TheAlgorithms/JavaScript)
+- Java — [TheAlgorithms/Java](https://github.com/TheAlgorithms/Java)

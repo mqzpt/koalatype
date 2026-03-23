@@ -4,6 +4,7 @@ import argparse
 import curses
 import json
 import random
+import sys
 import textwrap
 import time
 from dataclasses import dataclass, field
@@ -20,6 +21,8 @@ CONFIG_FILE = CONFIG_DIR / "config.toml"
 HISTORY_FILE = CONFIG_DIR / "history.json"
 ENGLISH_WORDS_FILE = Path(__file__).with_name("1000-most-common-words.txt")
 PYTHON_SNIPPETS_FILE = Path(__file__).with_name("python_snippets.txt")
+JS_SNIPPETS_FILE = Path(__file__).with_name("javascript_snippets.txt")
+JAVA_SNIPPETS_FILE = Path(__file__).with_name("java_snippets.txt")
 
 
 @dataclass(frozen=True)
@@ -172,6 +175,22 @@ def _build_word_packs() -> dict[str, WordPack]:
                 "KEY", "FOREIGN", "REFERENCES", "CONSTRAINT", "DEFAULT",
             ),
         ),
+        "java": WordPack(
+            name="java",
+            description="Java keywords and common identifiers",
+            words=(
+                "public", "private", "protected", "static", "final", "abstract",
+                "class", "interface", "extends", "implements", "new", "this",
+                "super", "return", "void", "int", "long", "double", "float",
+                "boolean", "char", "byte", "short", "String", "if", "else",
+                "for", "while", "do", "switch", "case", "break", "continue",
+                "try", "catch", "finally", "throw", "throws", "import",
+                "package", "null", "true", "false", "instanceof", "enum",
+                "List", "Map", "Set", "HashMap", "ArrayList", "Optional",
+                "Stream", "Collections", "Arrays", "Iterator", "Override",
+                "System", "println", "toString", "equals", "hashCode",
+            ),
+        ),
     }
     english_words = _load_english_words()
     packs["english-1000"] = WordPack(
@@ -189,6 +208,28 @@ def _build_word_packs() -> dict[str, WordPack]:
             description=f"Real Python code -- LeetCode solutions ({len(snippets)} snippets)",
             words=tuple(all_tokens),
             snippets=snippets,
+        )
+    js_snippets = _load_snippets(JS_SNIPPETS_FILE)
+    if js_snippets:
+        js_tokens: list[str] = []
+        for s in js_snippets:
+            js_tokens.extend(s.split())
+        packs["javascript-code"] = WordPack(
+            name="javascript-code",
+            description=f"Real JavaScript code -- open-source snippets ({len(js_snippets)} snippets)",
+            words=tuple(js_tokens),
+            snippets=js_snippets,
+        )
+    java_snippets = _load_snippets(JAVA_SNIPPETS_FILE)
+    if java_snippets:
+        java_tokens: list[str] = []
+        for s in java_snippets:
+            java_tokens.extend(s.split())
+        packs["java-code"] = WordPack(
+            name="java-code",
+            description=f"Real Java code -- open-source snippets ({len(java_snippets)} snippets)",
+            words=tuple(java_tokens),
+            snippets=java_snippets,
         )
     return packs
 
@@ -447,6 +488,261 @@ def _init_colors() -> None:
     curses.init_pair(4, curses.COLOR_YELLOW, -1)   # progress
 
 
+_LOGO_EMOJI = "\U0001f428"  # koala emoji
+
+_LOGO_TITLE = r"""
+    __               __      __
+   / /______  ____ _/ /___ _/ /___  ______  ___
+  / //_/ __ \/ __ `/ / __ `/ __/ / / / __ \/ _ \
+ / ,< / /_/ / /_/ / / /_/ / /_/ /_/ / /_/ /  __/
+/_/|_|\____/\__,_/_/\__,_/\__/\__, / .___/\___/
+                             /____/_/
+"""
+
+
+def _show_splash(stdscr: curses.window) -> None:
+    """Show koala logo splash screen; press any key to continue."""
+    _init_colors()
+    curses.curs_set(0)
+    stdscr.nodelay(False)
+    stdscr.erase()
+    height, width = stdscr.getmaxyx()
+
+    title_lines = _LOGO_TITLE.strip("\n").splitlines()
+    footer = "press any key to start | Esc to quit"
+
+    total_lines = 1 + 2 + len(title_lines) + 2
+    start_row = max(0, (height - total_lines) // 2)
+
+    # Render koala emoji centered
+    emoji_col = max(0, (width - 2) // 2)
+    try:
+        stdscr.addstr(start_row, emoji_col, _LOGO_EMOJI,
+                      curses.color_pair(4) | curses.A_BOLD)
+    except curses.error:
+        pass
+
+    # Render title in cyan
+    max_title_w = max(len(line) for line in title_lines)
+    title_left = max(0, (width - max_title_w) // 2)
+    title_start = start_row + 2
+
+    for i, line in enumerate(title_lines):
+        row = title_start + i
+        if row >= height - 1:
+            break
+        try:
+            stdscr.addstr(row, title_left, line[: width - title_left - 1],
+                          curses.color_pair(3) | curses.A_BOLD)
+        except curses.error:
+            pass
+
+    footer_row = title_start + len(title_lines) + 1
+    if footer_row < height:
+        col = max(0, (width - len(footer)) // 2)
+        try:
+            stdscr.addstr(footer_row, col, footer[: width - col - 1],
+                          curses.color_pair(4))
+        except curses.error:
+            pass
+
+    stdscr.refresh()
+    key = stdscr.getch()
+    if key == 27:  # Esc
+        raise SystemExit(0)
+
+
+# ---------------------------------------------------------------------------
+#  Interactive setup menu
+# ---------------------------------------------------------------------------
+
+_MENU_MODES = [
+    ("Words", "words", True),
+    ("Code", "code", True),
+    ("Quotes", "quotes", False),
+    ("Multiplayer", "multiplayer", False),
+]
+
+_MENU_WORDS_LANGS = [
+    ("English", "english-1000", True),
+    ("Python", "python", True),
+    ("JavaScript", "javascript", True),
+    ("Rust", "rust", True),
+    ("Go", "go", True),
+    ("SQL", "sql", True),
+    ("TypeScript", "typescript", False),
+    ("Java", "java", True),
+    ("C++", "cpp", False),
+]
+
+_MENU_CODE_LANGS = [
+    ("Python", "python-code", True),
+    ("JavaScript", "javascript-code", True),
+    ("Rust", "rust-code", False),
+    ("Go", "go-code", False),
+    ("TypeScript", "typescript-code", False),
+    ("Java", "java-code", True),
+]
+
+_MENU_DURATIONS = [
+    ("15 seconds", 15, True),
+    ("30 seconds", 30, True),
+    ("60 seconds", 60, True),
+    ("120 seconds", 120, True),
+    ("Zen  (no timer, Esc to end)", 0, True),
+]
+
+_MENU_WORD_COUNTS = [
+    ("10 words", 10, True),
+    ("20 words", 20, True),
+    ("30 words", 30, True),
+    ("50 words", 50, True),
+    ("100 words", 100, True),
+]
+
+_MENU_DIFFICULTIES = [
+    ("Any", "any", True),
+    ("Easy   (short words, \u22644 chars)", "easy", True),
+    ("Medium (5\u20137 chars)", "medium", True),
+    ("Hard   (long words, 8+ chars)", "hard", True),
+]
+
+
+def _curses_menu(
+    stdscr: curses.window,
+    title: str,
+    options: list[tuple[str, object, bool]],
+    default: int = 0,
+) -> object | None:
+    """Arrow-key menu. Returns selected value, or None on Esc."""
+    curses.curs_set(0)
+    stdscr.nodelay(False)
+    stdscr.keypad(True)
+
+    # Start on the default (or first enabled) option
+    sel = default
+    if not options[sel][2]:
+        for i, (_, _, enabled) in enumerate(options):
+            if enabled:
+                sel = i
+                break
+
+    while True:
+        stdscr.erase()
+        height, width = stdscr.getmaxyx()
+
+        stdscr.addstr(1, 2, title[: width - 3], curses.color_pair(3) | curses.A_BOLD)
+
+        base = 3
+        for i, (label, _, enabled) in enumerate(options):
+            row = base + i
+            if row >= height - 2:
+                break
+            if not enabled:
+                tag = f"  (coming soon)"
+                display = f"    {label}{tag}"
+                attr = curses.A_DIM
+            elif i == sel:
+                display = f"  > {label}"
+                attr = curses.color_pair(3) | curses.A_BOLD
+            else:
+                display = f"    {label}"
+                attr = curses.A_NORMAL
+            try:
+                stdscr.addstr(row, 0, display[: width - 1], attr)
+            except curses.error:
+                pass
+
+        footer = "\u2191/\u2193/j/k navigate  |  l/Enter select  |  h/Esc back"
+        try:
+            stdscr.addstr(height - 1, 2, footer[: width - 3], curses.color_pair(4))
+        except curses.error:
+            pass
+
+        stdscr.refresh()
+        key = stdscr.getch()
+
+        if key in (curses.KEY_UP, ord("k")):
+            for i in range(sel - 1, -1, -1):
+                if options[i][2]:
+                    sel = i
+                    break
+        elif key in (curses.KEY_DOWN, ord("j")):
+            for i in range(sel + 1, len(options)):
+                if options[i][2]:
+                    sel = i
+                    break
+        elif key in (10, 13, curses.KEY_ENTER, ord("l"), curses.KEY_RIGHT):
+            if options[sel][2]:
+                return options[sel][1]
+        elif key in (27, ord("h"), curses.KEY_LEFT):
+            return None
+
+
+def _run_interactive_setup(
+    word_packs: dict[str, WordPack],
+) -> dict[str, object] | None:
+    """Multi-step curses menu. Returns config dict or None if user quit."""
+    result: dict[str, object] = {}
+
+    def _setup(stdscr: curses.window) -> None:
+        nonlocal result
+        _init_colors()
+
+        # --- Step 1: Mode ---
+        while True:
+            mode = _curses_menu(stdscr, "Choose a mode", _MENU_MODES)
+            if mode is None:
+                result = {}
+                return
+
+            # --- Step 2: Language / Pack ---
+            if mode == "words":
+                lang_opts = _MENU_WORDS_LANGS
+            else:
+                lang_opts = _MENU_CODE_LANGS
+            pack = _curses_menu(stdscr, "Choose a language", lang_opts)
+            if pack is None:
+                continue  # back to mode
+
+            # --- Step 3: Duration ---
+            dur = _curses_menu(stdscr, "Choose a duration", _MENU_DURATIONS, default=1)
+            if dur is None:
+                continue  # back to mode
+
+            zen = dur == 0
+
+            if mode == "words":
+                # --- Step 4: Word count ---
+                wc = _curses_menu(
+                    stdscr, "How many words?", _MENU_WORD_COUNTS, default=2
+                )
+                if wc is None:
+                    continue
+
+                # --- Step 5: Difficulty ---
+                diff = _curses_menu(
+                    stdscr, "Choose difficulty", _MENU_DIFFICULTIES
+                )
+                if diff is None:
+                    continue
+            else:
+                wc = 30
+                diff = "any"
+
+            result = {
+                "pack": pack,
+                "words": wc,
+                "time": dur if not zen else None,
+                "zen": zen,
+                "difficulty": diff if diff != "any" else None,
+            }
+            return
+
+    curses.wrapper(_setup)
+    return result if result else None
+
+
 _BACKSPACE_KEYS = (curses.KEY_BACKSPACE, "\b", "\x7f", 127, 8)
 _ENTER_KEYS = ("\n", "\r", 10, 13)
 
@@ -556,9 +852,7 @@ def _run_curses_test(
                 start_time = time.perf_counter()
 
             if key == "\x1b":
-                if zen_mode:
-                    break
-                continue
+                break
 
             if key in _BACKSPACE_KEYS:
                 stats.backspace_count += 1
@@ -737,9 +1031,7 @@ def _run_code_test(
                 start_time = time.perf_counter()
 
             if key == "\x1b":
-                if zen_mode:
-                    break
-                continue
+                break
 
             if key == curses.KEY_RESIZE:
                 continue
@@ -847,48 +1139,14 @@ def _render_results(
     return "\n".join(lines)
 
 
-def main() -> None:
-    word_packs = _build_word_packs()
-    config = _load_config()
-    parser = _build_parser(word_packs)
-    args = parser.parse_args()
-
-    if args.pack is None:
-        args.pack = config.get("pack", "english-1000")
-    if args.words is None:
-        args.words = config.get("words", 30)
-    if args.time is None and not args.zen:
-        args.time = config.get("time", 30)
-    if args.difficulty is None:
-        args.difficulty = config.get("difficulty", None)
-
-    if args.list:
-        print(_render_pack_list(word_packs))
-        return
-
-    if args.history:
-        print(_render_history(_load_history()))
-        return
-
-    if args.file:
-        pack = _load_custom_words(args.file)
-    else:
-        pack = word_packs[args.pack]
-
-    if args.difficulty:
-        filtered_words = _filter_by_difficulty(pack.words, args.difficulty)
-        pack = WordPack(
-            name=pack.name,
-            description=f"{pack.description} ({args.difficulty})",
-            words=filtered_words,
-        )
-
-    duration = float(args.time) if args.time and not args.zen else 9999.0
-    zen = args.zen
+def _run_test_loop(
+    pack: WordPack, word_count: int, duration: float, zen: bool, seed: int | None
+) -> None:
+    """Run the test-play-again loop."""
     is_code = bool(pack.snippets)
 
     while True:
-        prompt = _generate_prompt(pack, args.words, args.seed)
+        prompt = _generate_prompt(pack, word_count, seed)
 
         if is_code:
             typed, elapsed, test_stats = _run_code_test(
@@ -908,21 +1166,87 @@ def main() -> None:
             "wpm": round(results["wpm"], 1),
             "raw_wpm": round(results["raw_wpm"], 1),
             "accuracy": round(results["accuracy"], 1),
-            "words": args.words,
+            "words": word_count,
             "duration": round(elapsed, 1),
         })
 
         while True:
-            choice = input("\nEnter 'r' to repeat, 'n' for new test, or 'q' to quit: ").lower().strip()
-            if choice == "r":
-                break
-            elif choice == "n":
-                prompt = _generate_prompt(pack, args.words, None)
-                break
-            elif choice == "q":
+            choice = input(
+                "\nEnter 'r' to repeat, 'n' for new test, or 'q'/Esc to quit: "
+            ).strip()
+            if choice in ("q", "Q", "\x1b"):
                 return
+            elif choice.lower() == "r":
+                break
+            elif choice.lower() == "n":
+                seed = None
+                break
             else:
                 print("Invalid choice. Please enter 'r', 'n', or 'q'.")
+
+
+def main() -> None:
+    word_packs = _build_word_packs()
+    config = _load_config()
+    parser = _build_parser(word_packs)
+    args = parser.parse_args()
+
+    # --- Handle --list / --history early ---
+    if args.list:
+        print(_render_pack_list(word_packs))
+        return
+    if args.history:
+        print(_render_history(_load_history()))
+        return
+
+    # --- No CLI args → interactive setup ---
+    no_args = len(sys.argv) == 1
+    if no_args:
+        curses.wrapper(_show_splash)
+        setup = _run_interactive_setup(word_packs)
+        if setup is None:
+            return
+        pack_name = str(setup["pack"])
+        word_count = int(setup["words"])  # type: ignore[arg-type]
+        zen = bool(setup["zen"])
+        difficulty = setup["difficulty"]
+        duration = float(setup["time"]) if setup["time"] else 9999.0
+        seed = None
+    else:
+        # --- CLI arg flow (unchanged) ---
+        if args.pack is None:
+            args.pack = config.get("pack", "english-1000")
+        if args.words is None:
+            args.words = config.get("words", 30)
+        if args.time is None and not args.zen:
+            args.time = config.get("time", 30)
+        if args.difficulty is None:
+            args.difficulty = config.get("difficulty", None)
+
+        curses.wrapper(_show_splash)
+
+        pack_name = args.pack
+        word_count = args.words
+        zen = args.zen
+        difficulty = args.difficulty
+        duration = float(args.time) if args.time and not zen else 9999.0
+        seed = args.seed
+
+    # --- Resolve pack ---
+    if not no_args and args.file:
+        pack = _load_custom_words(args.file)
+    else:
+        pack = word_packs[pack_name]
+
+    if difficulty:
+        filtered_words = _filter_by_difficulty(pack.words, str(difficulty))
+        pack = WordPack(
+            name=pack.name,
+            description=f"{pack.description} ({difficulty})",
+            words=filtered_words,
+        )
+
+    _run_test_loop(pack, word_count, duration, zen, seed)
 
 
 if __name__ == "__main__":

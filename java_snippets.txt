@@ -1,0 +1,1614 @@
+# Bubble Sort — TheAlgorithms/Java
+public <T extends Comparable<T>> T[] sort(T[] array) {
+    for (int i = 1, size = array.length; i < size; ++i) {
+        boolean swapped = false;
+        for (int j = 0; j < size - i; ++j) {
+            if (SortUtils.greater(array[j], array[j + 1])) {
+                SortUtils.swap(array, j, j + 1);
+                swapped = true;
+            }
+        }
+        if (!swapped) {
+            break;
+        }
+    }
+    return array;
+}
+---
+# Insertion Sort — TheAlgorithms/Java
+public <T extends Comparable<T>> T[] sort(T[] items, final int startIndex, final int endIndex) {
+    if (items == null || startIndex >= endIndex) {
+        return items;
+    }
+    for (int i = startIndex + 1; i < endIndex; i++) {
+        final T key = items[i];
+        int j = i - 1;
+        while (j >= startIndex && SortUtils.less(key, items[j])) {
+            items[j + 1] = items[j];
+            j--;
+        }
+        items[j + 1] = key;
+    }
+    return items;
+}
+---
+# Selection Sort — TheAlgorithms/Java
+public <T extends Comparable<T>> T[] sort(T[] array) {
+    for (int i = 0; i < array.length - 1; i++) {
+        int minIndex = i;
+        for (int j = i + 1; j < array.length; j++) {
+            if (SortUtils.less(array[j], array[minIndex])) {
+                minIndex = j;
+            }
+        }
+        SortUtils.swap(array, i, minIndex);
+    }
+    return array;
+}
+---
+# Linear Search — TheAlgorithms/Java
+public <T extends Comparable<T>> int find(T[] array, T value) {
+    for (int i = 0; i < array.length; i++) {
+        if (array[i].compareTo(value) == 0) {
+            return i;
+        }
+    }
+    return -1;
+}
+---
+# GCD (Euclidean Algorithm) — TheAlgorithms/Java
+public static int gcd(int num1, int num2) {
+    if (num1 < 0 || num2 < 0) {
+        throw new ArithmeticException();
+    }
+    if (num1 == 0 || num2 == 0) {
+        return Math.abs(num1 - num2);
+    }
+    while (num1 % num2 != 0) {
+        int remainder = num1 % num2;
+        num1 = num2;
+        num2 = remainder;
+    }
+    return num2;
+}
+---
+# Palindrome Number — TheAlgorithms/Java
+public static boolean isPalindrome(int number) {
+    if (number < 0) {
+        throw new IllegalArgumentException("Input parameter must not be negative!");
+    }
+    int numberCopy = number;
+    int reverseNumber = 0;
+    while (numberCopy != 0) {
+        int remainder = numberCopy % 10;
+        reverseNumber = reverseNumber * 10 + remainder;
+        numberCopy /= 10;
+    }
+    return number == reverseNumber;
+}
+---
+# Factorial (Iterative) — TheAlgorithms/Java
+public static long factorial(int n) {
+    if (n < 0) {
+        throw new IllegalArgumentException("Input number cannot be negative");
+    }
+    long factorial = 1;
+    for (int i = 1; i <= n; ++i) {
+        factorial *= i;
+    }
+    return factorial;
+}
+---
+# Reverse String — TheAlgorithms/Java
+public static String reverse2(String str) {
+    if (str == null || str.isEmpty()) {
+        return str;
+    }
+    char[] value = str.toCharArray();
+    for (int i = 0, j = str.length() - 1; i < j; i++, j--) {
+        char temp = value[i];
+        value[i] = value[j];
+        value[j] = temp;
+    }
+    return new String(value);
+}
+---
+# Anagram Check (Sorting) — TheAlgorithms/Java
+public static boolean areAnagramsBySorting(String s, String t) {
+    s = s.toLowerCase().replaceAll("[^a-z]", "");
+    t = t.toLowerCase().replaceAll("[^a-z]", "");
+    if (s.length() != t.length()) {
+        return false;
+    }
+    char[] c = s.toCharArray();
+    char[] d = t.toCharArray();
+    Arrays.sort(c);
+    Arrays.sort(d);
+    return Arrays.equals(c, d);
+}
+---
+# Anagram Check (Counting) — TheAlgorithms/Java
+public static boolean areAnagramsByCountingChars(String s, String t) {
+    s = s.toLowerCase().replaceAll("[^a-z]", "");
+    t = t.toLowerCase().replaceAll("[^a-z]", "");
+    int[] dict = new int[128];
+    for (char ch : s.toCharArray()) {
+        dict[ch]++;
+    }
+    for (char ch : t.toCharArray()) {
+        dict[ch]--;
+    }
+    for (int e : dict) {
+        if (e != 0) {
+            return false;
+        }
+    }
+    return true;
+}
+---
+# Linked List Stack Push — TheAlgorithms/Java
+public boolean push(int x) {
+    Node newNode = new Node(x);
+    newNode.next = head;
+    head = newNode;
+    size++;
+    return true;
+}
+---
+# Pangram Check — TheAlgorithms/Java
+public static boolean isPangram(String s) {
+    boolean[] lettersExisting = new boolean[26];
+    for (char c : s.toCharArray()) {
+        int letterIndex = c - (Character.isUpperCase(c) ? 'A' : 'a');
+        if (letterIndex >= 0 && letterIndex < lettersExisting.length) {
+            lettersExisting[letterIndex] = true;
+        }
+    }
+    for (boolean letterFlag : lettersExisting) {
+        if (!letterFlag) {
+            return false;
+        }
+    }
+    return true;
+}
+---
+# Find Max in Array — TheAlgorithms/Java
+public static int findMax(final int[] array) {
+    int n = array.length;
+    if (n == 0) {
+        throw new IllegalArgumentException("Array must be non-empty.");
+    }
+    int max = array[0];
+    for (int i = 1; i < n; i++) {
+        if (array[i] > max) {
+            max = array[i];
+        }
+    }
+    return max;
+}
+---
+# Find Min in Array — TheAlgorithms/Java
+public static int findMin(final int[] array) {
+    if (array.length == 0) {
+        throw new IllegalArgumentException("Array must be non-empty.");
+    }
+    int min = array[0];
+    for (int i = 1; i < array.length; i++) {
+        if (array[i] < min) {
+            min = array[i];
+        }
+    }
+    return min;
+}
+---
+# Average of Array — TheAlgorithms/Java
+public static double average(double[] numbers) {
+    if (numbers == null || numbers.length == 0) {
+        throw new IllegalArgumentException("Numbers array cannot be empty or null");
+    }
+    double sum = 0;
+    for (double number : numbers) {
+        sum += number;
+    }
+    return sum / numbers.length;
+}
+---
+# Two Pointer Pair Sum — TheAlgorithms/Java
+public static boolean isPairedSum(int[] arr, int key) {
+    if (arr == null) {
+        throw new IllegalArgumentException("Input array must not be null.");
+    }
+    int left = 0;
+    int right = arr.length - 1;
+    while (left < right) {
+        int sum = arr[left] + arr[right];
+        if (sum == key) {
+            return true;
+        }
+        if (sum < key) {
+            left++;
+        } else {
+            right--;
+        }
+    }
+    return false;
+}
+---
+# Sum of Digits — TheAlgorithms/Java
+public static int sumOfDigits(int number) {
+    final int base = 10;
+    number = Math.abs(number);
+    int sum = 0;
+    while (number != 0) {
+        sum += number % base;
+        number /= base;
+    }
+    return sum;
+}
+---
+# Number of Digits — TheAlgorithms/Java
+public static int numberOfDigits(int number) {
+    int digits = 0;
+    do {
+        digits++;
+        number /= 10;
+    } while (number != 0);
+    return digits;
+}
+---
+# All Characters Same — TheAlgorithms/Java
+public static boolean isAllCharactersSame(String s) {
+    if (s.isEmpty()) {
+        return true;
+    }
+    char firstChar = s.charAt(0);
+    for (int i = 1; i < s.length(); i++) {
+        if (s.charAt(i) != firstChar) {
+            return false;
+        }
+    }
+    return true;
+}
+---
+# Armstrong Number — TheAlgorithms/Java
+public boolean isArmstrong(int number) {
+    if (number < 0) {
+        return false;
+    }
+    long sum = 0;
+    int totalDigits = (int) Math.log10(number) + 1;
+    long originalNumber = number;
+    while (originalNumber > 0) {
+        long digit = originalNumber % 10;
+        sum += (long) Math.pow(digit, totalDigits);
+        originalNumber /= 10;
+    }
+    return sum == number;
+}
+---
+# Single Element via XOR — TheAlgorithms/Java
+public static int findSingleElement(int[] arr) {
+    int ele = 0;
+    for (int i = 0; i < arr.length; i++) {
+        ele ^= arr[i];
+    }
+    return ele;
+}
+---
+# Hamming Distance — TheAlgorithms/Java
+public static int calculateHammingDistance(String s1, String s2) {
+    if (s1 == null || s2 == null) {
+        throw new IllegalArgumentException("Strings must not be null");
+    }
+    if (s1.length() != s2.length()) {
+        throw new IllegalArgumentException("String lengths must be equal");
+    }
+    int distance = 0;
+    for (int i = 0; i < s1.length(); i++) {
+        if (s1.charAt(i) != s2.charAt(i)) {
+            distance++;
+        }
+    }
+    return distance;
+}
+---
+# Count Non-Whitespace Characters — TheAlgorithms/Java
+public static int countCharacters(String str) {
+    if (str == null) {
+        return 0;
+    }
+    return str.replaceAll("\\s", "").length();
+}
+---
+# Merge Sort Merge — TheAlgorithms/Java
+private <T extends Comparable<T>> void merge(T[] arr, int left, int mid, int right) {
+    int i = left;
+    int j = mid + 1;
+    System.arraycopy(arr, left, tempArray, left, right + 1 - left);
+    for (int k = left; k <= right; k++) {
+        if (j > right) {
+            arr[k] = (T) tempArray[i++];
+        } else if (i > mid) {
+            arr[k] = (T) tempArray[j++];
+        } else if (less(tempArray[j], tempArray[i])) {
+            arr[k] = (T) tempArray[j++];
+        } else {
+            arr[k] = (T) tempArray[i++];
+        }
+    }
+}
+---
+# Binary Search (Iterative) — TheAlgorithms/Java
+public static <T extends Comparable<T>> int binarySearch(T[] array, T key) {
+    int low = 0;
+    int high = array.length - 1;
+    while (low <= high) {
+        int mid = low + (high - low) / 2;
+        int cmp = key.compareTo(array[mid]);
+        if (cmp == 0) {
+            return mid;
+        } else if (cmp < 0) {
+            high = mid - 1;
+        } else {
+            low = mid + 1;
+        }
+    }
+    return -1;
+}
+---
+# Binary Search (Recursive) — TheAlgorithms/Java
+public static <T extends Comparable<T>> int binarySearch(T[] array, T key, int low, int high) {
+    if (low > high) {
+        return -1;
+    }
+    int mid = low + (high - low) / 2;
+    int cmp = key.compareTo(array[mid]);
+    if (cmp == 0) {
+        return mid;
+    } else if (cmp < 0) {
+        return binarySearch(array, key, low, mid - 1);
+    } else {
+        return binarySearch(array, key, mid + 1, high);
+    }
+}
+---
+# Quick Sort Partition — TheAlgorithms/Java
+public static int partition(int[] arr, int low, int high) {
+    int pivot = arr[high];
+    int i = low - 1;
+    for (int j = low; j < high; j++) {
+        if (arr[j] <= pivot) {
+            i++;
+            int temp = arr[i];
+            arr[i] = arr[j];
+            arr[j] = temp;
+        }
+    }
+    int temp = arr[i + 1];
+    arr[i + 1] = arr[high];
+    arr[high] = temp;
+    return i + 1;
+}
+---
+# Counting Sort — TheAlgorithms/Java
+public static int[] countingSort(int[] arr) {
+    int max = Arrays.stream(arr).max().orElse(0);
+    int[] count = new int[max + 1];
+    int[] output = new int[arr.length];
+    for (int val : arr) {
+        count[val]++;
+    }
+    for (int i = 1; i <= max; i++) {
+        count[i] += count[i - 1];
+    }
+    for (int i = arr.length - 1; i >= 0; i--) {
+        output[count[arr[i]] - 1] = arr[i];
+        count[arr[i]]--;
+    }
+    return output;
+}
+---
+# Fibonacci (Iterative) — TheAlgorithms/Java
+public static long fibonacci(int n) {
+    if (n <= 1) {
+        return n;
+    }
+    long prev = 0;
+    long curr = 1;
+    for (int i = 2; i <= n; i++) {
+        long next = prev + curr;
+        prev = curr;
+        curr = next;
+    }
+    return curr;
+}
+---
+# Fibonacci (Recursive) — TheAlgorithms/Java
+public static long fibonacciRecursive(int n) {
+    if (n < 0) {
+        throw new IllegalArgumentException("Input must be non-negative");
+    }
+    if (n <= 1) {
+        return n;
+    }
+    return fibonacciRecursive(n - 1) + fibonacciRecursive(n - 2);
+}
+---
+# Power (Fast Exponentiation) — TheAlgorithms/Java
+public static long power(long base, long exp, long mod) {
+    long result = 1;
+    base %= mod;
+    while (exp > 0) {
+        if ((exp & 1) == 1) {
+            result = result * base % mod;
+        }
+        exp >>= 1;
+        base = base * base % mod;
+    }
+    return result;
+}
+---
+# Sieve of Eratosthenes — TheAlgorithms/Java
+public static List<Integer> sieve(int n) {
+    boolean[] notPrime = new boolean[n + 1];
+    List<Integer> primes = new ArrayList<>();
+    for (int i = 2; i <= n; i++) {
+        if (!notPrime[i]) {
+            primes.add(i);
+            for (long j = (long) i * i; j <= n; j += i) {
+                notPrime[(int) j] = true;
+            }
+        }
+    }
+    return primes;
+}
+---
+# Is Prime Check — TheAlgorithms/Java
+public static boolean isPrime(int n) {
+    if (n <= 1) {
+        return false;
+    }
+    if (n <= 3) {
+        return true;
+    }
+    if (n % 2 == 0 || n % 3 == 0) {
+        return false;
+    }
+    for (int i = 5; i * i <= n; i += 6) {
+        if (n % i == 0 || n % (i + 2) == 0) {
+            return false;
+        }
+    }
+    return true;
+}
+---
+# LCM via GCD — TheAlgorithms/Java
+public static int lcm(int a, int b) {
+    if (a == 0 || b == 0) {
+        throw new ArithmeticException("Arguments must not be zero");
+    }
+    a = Math.abs(a);
+    b = Math.abs(b);
+    int gcd = a;
+    int temp = b;
+    while (temp != 0) {
+        int r = gcd % temp;
+        gcd = temp;
+        temp = r;
+    }
+    return a / gcd * b;
+}
+---
+# Reverse Array In Place — TheAlgorithms/Java
+public static <T> void reverseArray(T[] array) {
+    int left = 0;
+    int right = array.length - 1;
+    while (left < right) {
+        T temp = array[left];
+        array[left] = array[right];
+        array[right] = temp;
+        left++;
+        right--;
+    }
+}
+---
+# Rotate Array Left — TheAlgorithms/Java
+public static void rotateLeft(int[] arr, int k) {
+    int n = arr.length;
+    k = k % n;
+    reverse(arr, 0, k - 1);
+    reverse(arr, k, n - 1);
+    reverse(arr, 0, n - 1);
+}
+
+private static void reverse(int[] arr, int start, int end) {
+    while (start < end) {
+        int temp = arr[start];
+        arr[start++] = arr[end];
+        arr[end--] = temp;
+    }
+}
+---
+# Remove Duplicates from Sorted Array — LeetCode
+public static int removeDuplicates(int[] nums) {
+    if (nums.length == 0) {
+        return 0;
+    }
+    int slow = 0;
+    for (int fast = 1; fast < nums.length; fast++) {
+        if (nums[fast] != nums[slow]) {
+            slow++;
+            nums[slow] = nums[fast];
+        }
+    }
+    return slow + 1;
+}
+---
+# Valid Parentheses — LeetCode
+public static boolean isValid(String s) {
+    Deque<Character> stack = new ArrayDeque<>();
+    for (char c : s.toCharArray()) {
+        if (c == '(') stack.push(')');
+        else if (c == '{') stack.push('}');
+        else if (c == '[') stack.push(']');
+        else if (stack.isEmpty() || stack.pop() != c) {
+            return false;
+        }
+    }
+    return stack.isEmpty();
+}
+---
+# Maximum Subarray (Kadane's Algorithm) — LeetCode
+public static int maxSubArray(int[] nums) {
+    int maxSum = nums[0];
+    int currentSum = nums[0];
+    for (int i = 1; i < nums.length; i++) {
+        currentSum = Math.max(nums[i], currentSum + nums[i]);
+        maxSum = Math.max(maxSum, currentSum);
+    }
+    return maxSum;
+}
+---
+# Climbing Stairs (Dynamic Programming) — LeetCode
+public static int climbStairs(int n) {
+    if (n <= 2) {
+        return n;
+    }
+    int prev2 = 1;
+    int prev1 = 2;
+    for (int i = 3; i <= n; i++) {
+        int curr = prev1 + prev2;
+        prev2 = prev1;
+        prev1 = curr;
+    }
+    return prev1;
+}
+---
+# Depth First Search (Graph) — TheAlgorithms/Java
+public static void dfs(List<List<Integer>> adj, int node, boolean[] visited) {
+    visited[node] = true;
+    for (int neighbor : adj.get(node)) {
+        if (!visited[neighbor]) {
+            dfs(adj, neighbor, visited);
+        }
+    }
+}
+---
+# Breadth First Search (Graph) — TheAlgorithms/Java
+public static List<Integer> bfs(List<List<Integer>> adj, int start) {
+    List<Integer> result = new ArrayList<>();
+    boolean[] visited = new boolean[adj.size()];
+    Queue<Integer> queue = new LinkedList<>();
+    visited[start] = true;
+    queue.add(start);
+    while (!queue.isEmpty()) {
+        int node = queue.poll();
+        result.add(node);
+        for (int neighbor : adj.get(node)) {
+            if (!visited[neighbor]) {
+                visited[neighbor] = true;
+                queue.add(neighbor);
+            }
+        }
+    }
+    return result;
+}
+---
+# Count Set Bits (Brian Kernighan) — TheAlgorithms/Java
+public static int countSetBits(int n) {
+    int count = 0;
+    while (n > 0) {
+        n &= (n - 1);
+        count++;
+    }
+    return count;
+}
+---
+# Power of Two Check — TheAlgorithms/Java
+public static boolean isPowerOfTwo(int n) {
+    if (n <= 0) {
+        return false;
+    }
+    return (n & (n - 1)) == 0;
+}
+---
+# Reverse Bits — TheAlgorithms/Java
+public static int reverseBits(int n) {
+    int result = 0;
+    for (int i = 0; i < 32; i++) {
+        result <<= 1;
+        result |= (n & 1);
+        n >>= 1;
+    }
+    return result;
+}
+---
+# Caesar Cipher Encrypt — TheAlgorithms/Java
+public static String encrypt(String message, int shift) {
+    StringBuilder encoded = new StringBuilder();
+    shift %= 26;
+    for (char c : message.toCharArray()) {
+        if (Character.isLetter(c)) {
+            char base = Character.isUpperCase(c) ? 'A' : 'a';
+            encoded.append((char) ((c - base + shift) % 26 + base));
+        } else {
+            encoded.append(c);
+        }
+    }
+    return encoded.toString();
+}
+---
+# Caesar Cipher Decrypt — TheAlgorithms/Java
+public static String decrypt(String message, int shift) {
+    StringBuilder decoded = new StringBuilder();
+    shift %= 26;
+    for (char c : message.toCharArray()) {
+        if (Character.isLetter(c)) {
+            char base = Character.isUpperCase(c) ? 'A' : 'a';
+            decoded.append((char) ((c - base - shift + 26) % 26 + base));
+        } else {
+            decoded.append(c);
+        }
+    }
+    return decoded.toString();
+}
+---
+# Longest Common Prefix — LeetCode
+public static String longestCommonPrefix(String[] strs) {
+    if (strs == null || strs.length == 0) {
+        return "";
+    }
+    String prefix = strs[0];
+    for (int i = 1; i < strs.length; i++) {
+        while (strs[i].indexOf(prefix) != 0) {
+            prefix = prefix.substring(0, prefix.length() - 1);
+            if (prefix.isEmpty()) {
+                return "";
+            }
+        }
+    }
+    return prefix;
+}
+---
+# Merge Two Sorted Arrays — TheAlgorithms/Java
+public static int[] mergeSorted(int[] a, int[] b) {
+    int[] result = new int[a.length + b.length];
+    int i = 0, j = 0, k = 0;
+    while (i < a.length && j < b.length) {
+        if (a[i] <= b[j]) {
+            result[k++] = a[i++];
+        } else {
+            result[k++] = b[j++];
+        }
+    }
+    while (i < a.length) result[k++] = a[i++];
+    while (j < b.length) result[k++] = b[j++];
+    return result;
+}
+---
+# Matrix Transpose — TheAlgorithms/Java
+public static int[][] transpose(int[][] matrix) {
+    int rows = matrix.length;
+    int cols = matrix[0].length;
+    int[][] result = new int[cols][rows];
+    for (int i = 0; i < rows; i++) {
+        for (int j = 0; j < cols; j++) {
+            result[j][i] = matrix[i][j];
+        }
+    }
+    return result;
+}
+---
+# Palindrome String Check — TheAlgorithms/Java
+public static boolean isPalindromeString(String s) {
+    s = s.toLowerCase().replaceAll("[^a-z0-9]", "");
+    int left = 0;
+    int right = s.length() - 1;
+    while (left < right) {
+        if (s.charAt(left) != s.charAt(right)) {
+            return false;
+        }
+        left++;
+        right--;
+    }
+    return true;
+}
+---
+# Stack Using Array — TheAlgorithms/Java
+public void push(int value) {
+    if (top == maxSize - 1) {
+        throw new StackOverflowError("Stack is full");
+    }
+    stackArray[++top] = value;
+}
+
+public int pop() {
+    if (top == -1) {
+        throw new EmptyStackException();
+    }
+    return stackArray[top--];
+}
+
+public int peek() {
+    if (top == -1) {
+        throw new EmptyStackException();
+    }
+    return stackArray[top];
+}
+---
+# Queue Using Linked List — TheAlgorithms/Java
+public void enqueue(int data) {
+    Node newNode = new Node(data);
+    if (rear == null) {
+        front = rear = newNode;
+    } else {
+        rear.next = newNode;
+        rear = newNode;
+    }
+    size++;
+}
+
+public int dequeue() {
+    if (front == null) {
+        throw new NoSuchElementException("Queue is empty");
+    }
+    int data = front.data;
+    front = front.next;
+    if (front == null) rear = null;
+    size--;
+    return data;
+}
+---
+# Binary Tree Inorder Traversal — TheAlgorithms/Java
+public static List<Integer> inorderTraversal(TreeNode root) {
+    List<Integer> result = new ArrayList<>();
+    Deque<TreeNode> stack = new ArrayDeque<>();
+    TreeNode current = root;
+    while (current != null || !stack.isEmpty()) {
+        while (current != null) {
+            stack.push(current);
+            current = current.left;
+        }
+        current = stack.pop();
+        result.add(current.val);
+        current = current.right;
+    }
+    return result;
+}
+---
+# Binary Tree Max Depth — LeetCode
+public static int maxDepth(TreeNode root) {
+    if (root == null) {
+        return 0;
+    }
+    int leftDepth = maxDepth(root.left);
+    int rightDepth = maxDepth(root.right);
+    return Math.max(leftDepth, rightDepth) + 1;
+}
+---
+# Invert Binary Tree — LeetCode
+public static TreeNode invertTree(TreeNode root) {
+    if (root == null) {
+        return null;
+    }
+    TreeNode temp = root.left;
+    root.left = invertTree(root.right);
+    root.right = invertTree(temp);
+    return root;
+}
+---
+# Symmetric Tree Check — LeetCode
+public static boolean isSymmetric(TreeNode root) {
+    return root == null || isMirror(root.left, root.right);
+}
+
+private static boolean isMirror(TreeNode left, TreeNode right) {
+    if (left == null && right == null) return true;
+    if (left == null || right == null) return false;
+    return left.val == right.val
+        && isMirror(left.left, right.right)
+        && isMirror(left.right, right.left);
+}
+---
+# Reverse Linked List — LeetCode
+public static ListNode reverseList(ListNode head) {
+    ListNode prev = null;
+    ListNode current = head;
+    while (current != null) {
+        ListNode next = current.next;
+        current.next = prev;
+        prev = current;
+        current = next;
+    }
+    return prev;
+}
+---
+# Detect Cycle in Linked List — LeetCode
+public static boolean hasCycle(ListNode head) {
+    ListNode slow = head;
+    ListNode fast = head;
+    while (fast != null && fast.next != null) {
+        slow = slow.next;
+        fast = fast.next.next;
+        if (slow == fast) {
+            return true;
+        }
+    }
+    return false;
+}
+---
+# Merge Two Sorted Linked Lists — LeetCode
+public static ListNode mergeTwoLists(ListNode l1, ListNode l2) {
+    ListNode dummy = new ListNode(0);
+    ListNode tail = dummy;
+    while (l1 != null && l2 != null) {
+        if (l1.val <= l2.val) {
+            tail.next = l1;
+            l1 = l1.next;
+        } else {
+            tail.next = l2;
+            l2 = l2.next;
+        }
+        tail = tail.next;
+    }
+    tail.next = (l1 != null) ? l1 : l2;
+    return dummy.next;
+}
+---
+# Dutch National Flag (Sort Colors) — LeetCode
+public static void sortColors(int[] nums) {
+    int low = 0, mid = 0, high = nums.length - 1;
+    while (mid <= high) {
+        if (nums[mid] == 0) {
+            int temp = nums[low];
+            nums[low++] = nums[mid];
+            nums[mid++] = temp;
+        } else if (nums[mid] == 1) {
+            mid++;
+        } else {
+            int temp = nums[mid];
+            nums[mid] = nums[high];
+            nums[high--] = temp;
+        }
+    }
+}
+---
+# Coin Change (Dynamic Programming) — LeetCode
+public static int coinChange(int[] coins, int amount) {
+    int[] dp = new int[amount + 1];
+    Arrays.fill(dp, amount + 1);
+    dp[0] = 0;
+    for (int coin : coins) {
+        for (int i = coin; i <= amount; i++) {
+            dp[i] = Math.min(dp[i], dp[i - coin] + 1);
+        }
+    }
+    return dp[amount] > amount ? -1 : dp[amount];
+}
+---
+# 0/1 Knapsack (Dynamic Programming) — TheAlgorithms/Java
+public static int knapsack(int capacity, int[] weights, int[] values) {
+    int n = weights.length;
+    int[] dp = new int[capacity + 1];
+    for (int i = 0; i < n; i++) {
+        for (int w = capacity; w >= weights[i]; w--) {
+            dp[w] = Math.max(dp[w], dp[w - weights[i]] + values[i]);
+        }
+    }
+    return dp[capacity];
+}
+---
+# Longest Common Subsequence — TheAlgorithms/Java
+public static int longestCommonSubsequence(String text1, String text2) {
+    int m = text1.length(), n = text2.length();
+    int[][] dp = new int[m + 1][n + 1];
+    for (int i = 1; i <= m; i++) {
+        for (int j = 1; j <= n; j++) {
+            if (text1.charAt(i - 1) == text2.charAt(j - 1)) {
+                dp[i][j] = dp[i - 1][j - 1] + 1;
+            } else {
+                dp[i][j] = Math.max(dp[i - 1][j], dp[i][j - 1]);
+            }
+        }
+    }
+    return dp[m][n];
+}
+---
+# Longest Increasing Subsequence Length — LeetCode
+public static int lengthOfLIS(int[] nums) {
+    List<Integer> tails = new ArrayList<>();
+    for (int num : nums) {
+        int pos = Collections.binarySearch(tails, num);
+        if (pos < 0) pos = -(pos + 1);
+        if (pos == tails.size()) {
+            tails.add(num);
+        } else {
+            tails.set(pos, num);
+        }
+    }
+    return tails.size();
+}
+---
+# Edit Distance (Levenshtein) — TheAlgorithms/Java
+public static int editDistance(String word1, String word2) {
+    int m = word1.length(), n = word2.length();
+    int[] dp = new int[n + 1];
+    for (int j = 0; j <= n; j++) dp[j] = j;
+    for (int i = 1; i <= m; i++) {
+        int prev = dp[0];
+        dp[0] = i;
+        for (int j = 1; j <= n; j++) {
+            int temp = dp[j];
+            if (word1.charAt(i - 1) == word2.charAt(j - 1)) {
+                dp[j] = prev;
+            } else {
+                dp[j] = 1 + Math.min(prev, Math.min(dp[j], dp[j - 1]));
+            }
+            prev = temp;
+        }
+    }
+    return dp[n];
+}
+---
+# House Robber (Dynamic Programming) — LeetCode
+public static int rob(int[] nums) {
+    if (nums.length == 0) return 0;
+    if (nums.length == 1) return nums[0];
+    int prev2 = 0, prev1 = 0;
+    for (int num : nums) {
+        int curr = Math.max(prev1, prev2 + num);
+        prev2 = prev1;
+        prev1 = curr;
+    }
+    return prev1;
+}
+---
+# String Permutations — TheAlgorithms/Java
+public static List<String> permutations(String str) {
+    List<String> result = new ArrayList<>();
+    permute(str.toCharArray(), 0, result);
+    return result;
+}
+
+private static void permute(char[] chars, int index, List<String> result) {
+    if (index == chars.length - 1) {
+        result.add(new String(chars));
+        return;
+    }
+    for (int i = index; i < chars.length; i++) {
+        char temp = chars[index];
+        chars[index] = chars[i];
+        chars[i] = temp;
+        permute(chars, index + 1, result);
+        chars[i] = chars[index];
+        chars[index] = temp;
+    }
+}
+---
+# Subsets (Power Set) — LeetCode
+public static List<List<Integer>> subsets(int[] nums) {
+    List<List<Integer>> result = new ArrayList<>();
+    result.add(new ArrayList<>());
+    for (int num : nums) {
+        int size = result.size();
+        for (int i = 0; i < size; i++) {
+            List<Integer> subset = new ArrayList<>(result.get(i));
+            subset.add(num);
+            result.add(subset);
+        }
+    }
+    return result;
+}
+---
+# N-Queens Solver — TheAlgorithms/Java
+private static boolean isSafe(int[] queens, int row, int col) {
+    for (int i = 0; i < row; i++) {
+        if (queens[i] == col
+            || queens[i] - i == col - row
+            || queens[i] + i == col + row) {
+            return false;
+        }
+    }
+    return true;
+}
+---
+# Dijkstra Shortest Path — TheAlgorithms/Java
+public static int[] dijkstra(int[][] graph, int src) {
+    int n = graph.length;
+    int[] dist = new int[n];
+    boolean[] visited = new boolean[n];
+    Arrays.fill(dist, Integer.MAX_VALUE);
+    dist[src] = 0;
+    for (int count = 0; count < n - 1; count++) {
+        int u = -1;
+        for (int i = 0; i < n; i++) {
+            if (!visited[i] && (u == -1 || dist[i] < dist[u])) {
+                u = i;
+            }
+        }
+        visited[u] = true;
+        for (int v = 0; v < n; v++) {
+            if (graph[u][v] != 0 && !visited[v] && dist[u] + graph[u][v] < dist[v]) {
+                dist[v] = dist[u] + graph[u][v];
+            }
+        }
+    }
+    return dist;
+}
+---
+# Union-Find (Disjoint Set) — TheAlgorithms/Java
+public int find(int x) {
+    if (parent[x] != x) {
+        parent[x] = find(parent[x]);
+    }
+    return parent[x];
+}
+
+public void union(int x, int y) {
+    int rootX = find(x);
+    int rootY = find(y);
+    if (rootX != rootY) {
+        if (rank[rootX] < rank[rootY]) parent[rootX] = rootY;
+        else if (rank[rootX] > rank[rootY]) parent[rootY] = rootX;
+        else { parent[rootY] = rootX; rank[rootX]++; }
+    }
+}
+---
+# Topological Sort (Kahn's Algorithm) — TheAlgorithms/Java
+public static List<Integer> topologicalSort(int vertices, List<List<Integer>> adj) {
+    int[] inDegree = new int[vertices];
+    for (List<Integer> edges : adj) {
+        for (int dest : edges) inDegree[dest]++;
+    }
+    Queue<Integer> queue = new LinkedList<>();
+    for (int i = 0; i < vertices; i++) {
+        if (inDegree[i] == 0) queue.add(i);
+    }
+    List<Integer> order = new ArrayList<>();
+    while (!queue.isEmpty()) {
+        int node = queue.poll();
+        order.add(node);
+        for (int neighbor : adj.get(node)) {
+            if (--inDegree[neighbor] == 0) queue.add(neighbor);
+        }
+    }
+    return order;
+}
+---
+# Number of Islands (DFS) — LeetCode
+public static int numIslands(char[][] grid) {
+    int count = 0;
+    for (int i = 0; i < grid.length; i++) {
+        for (int j = 0; j < grid[0].length; j++) {
+            if (grid[i][j] == '1') {
+                sinkIsland(grid, i, j);
+                count++;
+            }
+        }
+    }
+    return count;
+}
+
+private static void sinkIsland(char[][] grid, int i, int j) {
+    if (i < 0 || i >= grid.length || j < 0 || j >= grid[0].length || grid[i][j] == '0') return;
+    grid[i][j] = '0';
+    sinkIsland(grid, i + 1, j);
+    sinkIsland(grid, i - 1, j);
+    sinkIsland(grid, i, j + 1);
+    sinkIsland(grid, i, j - 1);
+}
+---
+# HashMap Word Frequency Counter — Java Pattern
+public static Map<String, Integer> wordFrequency(String text) {
+    Map<String, Integer> freq = new HashMap<>();
+    for (String word : text.toLowerCase().split("\\s+")) {
+        freq.merge(word, 1, Integer::sum);
+    }
+    return freq;
+}
+---
+# Stream Collect to Grouped Map — Java Pattern
+public static <T> Map<String, List<T>> groupByFirstLetter(List<T> items) {
+    return items.stream()
+        .collect(Collectors.groupingBy(
+            item -> String.valueOf(item.toString().charAt(0))
+        ));
+}
+---
+# Stream Filter and Map — Java Pattern
+public static List<String> filterAndTransform(List<String> input, String prefix) {
+    return input.stream()
+        .filter(s -> s.startsWith(prefix))
+        .map(String::toUpperCase)
+        .sorted()
+        .collect(Collectors.toList());
+}
+---
+# Flatten Nested List — Java Pattern
+public static <T> List<T> flatten(List<List<T>> nested) {
+    return nested.stream()
+        .flatMap(Collection::stream)
+        .collect(Collectors.toList());
+}
+---
+# Binary to Decimal Conversion — TheAlgorithms/Java
+public static int binaryToDecimal(String binary) {
+    int decimal = 0;
+    int power = 0;
+    for (int i = binary.length() - 1; i >= 0; i--) {
+        if (binary.charAt(i) == '1') {
+            decimal += (1 << power);
+        }
+        power++;
+    }
+    return decimal;
+}
+---
+# Decimal to Binary Conversion — TheAlgorithms/Java
+public static String decimalToBinary(int decimal) {
+    if (decimal == 0) return "0";
+    StringBuilder binary = new StringBuilder();
+    while (decimal > 0) {
+        binary.insert(0, decimal % 2);
+        decimal /= 2;
+    }
+    return binary.toString();
+}
+---
+# Roman to Integer — LeetCode
+public static int romanToInt(String s) {
+    Map<Character, Integer> map = Map.of(
+        'I', 1, 'V', 5, 'X', 10, 'L', 50,
+        'C', 100, 'D', 500, 'M', 1000);
+    int result = 0;
+    for (int i = 0; i < s.length(); i++) {
+        int val = map.get(s.charAt(i));
+        if (i + 1 < s.length() && val < map.get(s.charAt(i + 1))) {
+            result -= val;
+        } else {
+            result += val;
+        }
+    }
+    return result;
+}
+---
+# Integer to Roman — LeetCode
+public static String intToRoman(int num) {
+    int[] values = {1000, 900, 500, 400, 100, 90, 50, 40, 10, 9, 5, 4, 1};
+    String[] symbols = {"M", "CM", "D", "CD", "C", "XC", "L", "XL", "X", "IX", "V", "IV", "I"};
+    StringBuilder sb = new StringBuilder();
+    for (int i = 0; i < values.length; i++) {
+        while (num >= values[i]) {
+            sb.append(symbols[i]);
+            num -= values[i];
+        }
+    }
+    return sb.toString();
+}
+---
+# Product of Array Except Self — LeetCode
+public static int[] productExceptSelf(int[] nums) {
+    int n = nums.length;
+    int[] output = new int[n];
+    output[0] = 1;
+    for (int i = 1; i < n; i++) {
+        output[i] = output[i - 1] * nums[i - 1];
+    }
+    int right = 1;
+    for (int i = n - 1; i >= 0; i--) {
+        output[i] *= right;
+        right *= nums[i];
+    }
+    return output;
+}
+---
+# Spiral Matrix Traversal — LeetCode
+public static List<Integer> spiralOrder(int[][] matrix) {
+    List<Integer> result = new ArrayList<>();
+    int top = 0, bottom = matrix.length - 1;
+    int left = 0, right = matrix[0].length - 1;
+    while (top <= bottom && left <= right) {
+        for (int i = left; i <= right; i++) result.add(matrix[top][i]);
+        top++;
+        for (int i = top; i <= bottom; i++) result.add(matrix[i][right]);
+        right--;
+        if (top <= bottom) {
+            for (int i = right; i >= left; i--) result.add(matrix[bottom][i]);
+            bottom--;
+        }
+        if (left <= right) {
+            for (int i = bottom; i >= top; i--) result.add(matrix[i][left]);
+            left++;
+        }
+    }
+    return result;
+}
+---
+# Majority Element (Boyer-Moore Voting) — LeetCode
+public static int majorityElement(int[] nums) {
+    int candidate = nums[0];
+    int count = 1;
+    for (int i = 1; i < nums.length; i++) {
+        if (count == 0) {
+            candidate = nums[i];
+            count = 1;
+        } else if (nums[i] == candidate) {
+            count++;
+        } else {
+            count--;
+        }
+    }
+    return candidate;
+}
+---
+# Trap Rainwater — LeetCode
+public static int trap(int[] height) {
+    int left = 0, right = height.length - 1;
+    int leftMax = 0, rightMax = 0, water = 0;
+    while (left < right) {
+        if (height[left] < height[right]) {
+            leftMax = Math.max(leftMax, height[left]);
+            water += leftMax - height[left];
+            left++;
+        } else {
+            rightMax = Math.max(rightMax, height[right]);
+            water += rightMax - height[right];
+            right--;
+        }
+    }
+    return water;
+}
+---
+# Minimum Window Substring — LeetCode
+public static String minWindow(String s, String t) {
+    int[] need = new int[128];
+    for (char c : t.toCharArray()) need[c]++;
+    int left = 0, count = t.length(), minLen = Integer.MAX_VALUE, start = 0;
+    for (int right = 0; right < s.length(); right++) {
+        if (need[s.charAt(right)]-- > 0) count--;
+        while (count == 0) {
+            if (right - left + 1 < minLen) {
+                minLen = right - left + 1;
+                start = left;
+            }
+            if (++need[s.charAt(left++)] > 0) count++;
+        }
+    }
+    return minLen == Integer.MAX_VALUE ? "" : s.substring(start, start + minLen);
+}
+---
+# Container With Most Water — LeetCode
+public static int maxArea(int[] height) {
+    int left = 0, right = height.length - 1;
+    int maxWater = 0;
+    while (left < right) {
+        int area = Math.min(height[left], height[right]) * (right - left);
+        maxWater = Math.max(maxWater, area);
+        if (height[left] < height[right]) {
+            left++;
+        } else {
+            right--;
+        }
+    }
+    return maxWater;
+}
+---
+# Three Sum — LeetCode
+public static List<List<Integer>> threeSum(int[] nums) {
+    Arrays.sort(nums);
+    List<List<Integer>> result = new ArrayList<>();
+    for (int i = 0; i < nums.length - 2; i++) {
+        if (i > 0 && nums[i] == nums[i - 1]) continue;
+        int lo = i + 1, hi = nums.length - 1;
+        while (lo < hi) {
+            int sum = nums[i] + nums[lo] + nums[hi];
+            if (sum == 0) {
+                result.add(Arrays.asList(nums[i], nums[lo], nums[hi]));
+                while (lo < hi && nums[lo] == nums[lo + 1]) lo++;
+                while (lo < hi && nums[hi] == nums[hi - 1]) hi--;
+                lo++; hi--;
+            } else if (sum < 0) lo++;
+            else hi--;
+        }
+    }
+    return result;
+}
+---
+# Atoi (String to Integer) — LeetCode
+public static int myAtoi(String s) {
+    s = s.trim();
+    if (s.isEmpty()) return 0;
+    int sign = 1, i = 0;
+    if (s.charAt(0) == '-' || s.charAt(0) == '+') {
+        sign = s.charAt(0) == '-' ? -1 : 1;
+        i++;
+    }
+    long result = 0;
+    while (i < s.length() && Character.isDigit(s.charAt(i))) {
+        result = result * 10 + (s.charAt(i++) - '0');
+        if (result * sign > Integer.MAX_VALUE) return Integer.MAX_VALUE;
+        if (result * sign < Integer.MIN_VALUE) return Integer.MIN_VALUE;
+    }
+    return (int) (result * sign);
+}
+---
+# Rotate Image 90 Degrees — LeetCode
+public static void rotate(int[][] matrix) {
+    int n = matrix.length;
+    for (int i = 0; i < n; i++) {
+        for (int j = i + 1; j < n; j++) {
+            int temp = matrix[i][j];
+            matrix[i][j] = matrix[j][i];
+            matrix[j][i] = temp;
+        }
+    }
+    for (int i = 0; i < n; i++) {
+        for (int lo = 0, hi = n - 1; lo < hi; lo++, hi--) {
+            int temp = matrix[i][lo];
+            matrix[i][lo] = matrix[i][hi];
+            matrix[i][hi] = temp;
+        }
+    }
+}
+---
+# Min Stack — LeetCode
+public void push(int val) {
+    stack.push(val);
+    if (minStack.isEmpty() || val <= minStack.peek()) {
+        minStack.push(val);
+    }
+}
+
+public void pop() {
+    if (stack.peek().equals(minStack.peek())) {
+        minStack.pop();
+    }
+    stack.pop();
+}
+
+public int getMin() {
+    return minStack.peek();
+}
+---
+# LRU Cache Get — LeetCode
+public int get(int key) {
+    if (!map.containsKey(key)) {
+        return -1;
+    }
+    Node node = map.get(key);
+    removeNode(node);
+    addToHead(node);
+    return node.value;
+}
+
+public void put(int key, int value) {
+    if (map.containsKey(key)) {
+        Node node = map.get(key);
+        node.value = value;
+        removeNode(node);
+        addToHead(node);
+    } else {
+        Node newNode = new Node(key, value);
+        map.put(key, newNode);
+        addToHead(newNode);
+        if (map.size() > capacity) {
+            map.remove(tail.prev.key);
+            removeNode(tail.prev);
+        }
+    }
+}
+---
+# Trie Insert and Search — LeetCode
+public void insert(String word) {
+    TrieNode node = root;
+    for (char c : word.toCharArray()) {
+        int idx = c - 'a';
+        if (node.children[idx] == null) {
+            node.children[idx] = new TrieNode();
+        }
+        node = node.children[idx];
+    }
+    node.isEnd = true;
+}
+
+public boolean search(String word) {
+    TrieNode node = root;
+    for (char c : word.toCharArray()) {
+        int idx = c - 'a';
+        if (node.children[idx] == null) return false;
+        node = node.children[idx];
+    }
+    return node.isEnd;
+}
+---
+# String Compression — LeetCode
+public static int compress(char[] chars) {
+    int write = 0, read = 0;
+    while (read < chars.length) {
+        char current = chars[read];
+        int count = 0;
+        while (read < chars.length && chars[read] == current) {
+            read++;
+            count++;
+        }
+        chars[write++] = current;
+        if (count > 1) {
+            for (char c : String.valueOf(count).toCharArray()) {
+                chars[write++] = c;
+            }
+        }
+    }
+    return write;
+}
+---
+# Move Zeroes to End — LeetCode
+public static void moveZeroes(int[] nums) {
+    int insertPos = 0;
+    for (int num : nums) {
+        if (num != 0) {
+            nums[insertPos++] = num;
+        }
+    }
+    while (insertPos < nums.length) {
+        nums[insertPos++] = 0;
+    }
+}
+---
+# Contains Duplicate — LeetCode
+public static boolean containsDuplicate(int[] nums) {
+    Set<Integer> seen = new HashSet<>();
+    for (int num : nums) {
+        if (!seen.add(num)) {
+            return true;
+        }
+    }
+    return false;
+}
+---
+# Happy Number — LeetCode
+public static boolean isHappy(int n) {
+    Set<Integer> seen = new HashSet<>();
+    while (n != 1 && !seen.contains(n)) {
+        seen.add(n);
+        int sum = 0;
+        while (n > 0) {
+            int digit = n % 10;
+            sum += digit * digit;
+            n /= 10;
+        }
+        n = sum;
+    }
+    return n == 1;
+}
+---
+# Pascal's Triangle — LeetCode
+public static List<List<Integer>> generate(int numRows) {
+    List<List<Integer>> triangle = new ArrayList<>();
+    for (int i = 0; i < numRows; i++) {
+        List<Integer> row = new ArrayList<>();
+        for (int j = 0; j <= i; j++) {
+            if (j == 0 || j == i) {
+                row.add(1);
+            } else {
+                row.add(triangle.get(i - 1).get(j - 1) + triangle.get(i - 1).get(j));
+            }
+        }
+        triangle.add(row);
+    }
+    return triangle;
+}
+---
+# Matrix Multiplication — TheAlgorithms/Java
+public static int[][] multiply(int[][] a, int[][] b) {
+    int rows = a.length, cols = b[0].length, inner = b.length;
+    int[][] result = new int[rows][cols];
+    for (int i = 0; i < rows; i++) {
+        for (int j = 0; j < cols; j++) {
+            for (int k = 0; k < inner; k++) {
+                result[i][j] += a[i][k] * b[k][j];
+            }
+        }
+    }
+    return result;
+}
+---
+# Abs Value Without Math.abs — TheAlgorithms/Java
+public static int absVal(int n) {
+    if (n < 0) {
+        return -n;
+    }
+    return n;
+}
+---
+# Swap Two Numbers Without Temp — TheAlgorithms/Java
+public static int[] swapWithoutTemp(int a, int b) {
+    a = a ^ b;
+    b = a ^ b;
+    a = a ^ b;
+    return new int[]{a, b};
+}
+---
+# Ceiling Division — TheAlgorithms/Java
+public static int ceilDiv(int a, int b) {
+    if (b == 0) {
+        throw new ArithmeticException("Division by zero");
+    }
+    return (a + b - 1) / b;
+}
+---
+# String to Title Case — Java Pattern
+public static String toTitleCase(String input) {
+    StringBuilder result = new StringBuilder();
+    boolean capitalizeNext = true;
+    for (char c : input.toCharArray()) {
+        if (Character.isWhitespace(c)) {
+            capitalizeNext = true;
+            result.append(c);
+        } else if (capitalizeNext) {
+            result.append(Character.toUpperCase(c));
+            capitalizeNext = false;
+        } else {
+            result.append(Character.toLowerCase(c));
+        }
+    }
+    return result.toString();
+}
+---
+# Count Vowels and Consonants — Java Pattern
+public static int[] countVowelsConsonants(String str) {
+    int vowels = 0, consonants = 0;
+    for (char c : str.toLowerCase().toCharArray()) {
+        if (c >= 'a' && c <= 'z') {
+            if ("aeiou".indexOf(c) >= 0) {
+                vowels++;
+            } else {
+                consonants++;
+            }
+        }
+    }
+    return new int[]{vowels, consonants};
+}
+---
+# Unique Paths (Grid DP) — LeetCode
+public static int uniquePaths(int m, int n) {
+    int[] dp = new int[n];
+    Arrays.fill(dp, 1);
+    for (int i = 1; i < m; i++) {
+        for (int j = 1; j < n; j++) {
+            dp[j] += dp[j - 1];
+        }
+    }
+    return dp[n - 1];
+}
+---
+# Jump Game (Greedy) — LeetCode
+public static boolean canJump(int[] nums) {
+    int maxReach = 0;
+    for (int i = 0; i < nums.length; i++) {
+        if (i > maxReach) {
+            return false;
+        }
+        maxReach = Math.max(maxReach, i + nums[i]);
+    }
+    return true;
+}
