@@ -20,9 +20,10 @@ CONFIG_DIR = Path.home() / ".koalatype"
 CONFIG_FILE = CONFIG_DIR / "config.toml"
 HISTORY_FILE = CONFIG_DIR / "history.json"
 ENGLISH_WORDS_FILE = Path(__file__).with_name("1000-most-common-words.txt")
-PYTHON_SNIPPETS_FILE = Path(__file__).with_name("python_snippets.txt")
-JS_SNIPPETS_FILE = Path(__file__).with_name("javascript_snippets.txt")
-JAVA_SNIPPETS_FILE = Path(__file__).with_name("java_snippets.txt")
+SNIPPETS_DIR = Path(__file__).with_name("snippets")
+PYTHON_SNIPPETS_FILE = SNIPPETS_DIR / "python_snippets.txt"
+JS_SNIPPETS_FILE = SNIPPETS_DIR / "javascript_snippets.txt"
+JAVA_SNIPPETS_FILE = SNIPPETS_DIR / "java_snippets.txt"
 
 
 @dataclass(frozen=True)
