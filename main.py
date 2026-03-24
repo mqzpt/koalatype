@@ -24,6 +24,7 @@ SNIPPETS_DIR = Path(__file__).with_name("snippets")
 PYTHON_SNIPPETS_FILE = SNIPPETS_DIR / "python_snippets.txt"
 JS_SNIPPETS_FILE = SNIPPETS_DIR / "javascript_snippets.txt"
 JAVA_SNIPPETS_FILE = SNIPPETS_DIR / "java_snippets.txt"
+GO_SNIPPETS_FILE = SNIPPETS_DIR / "go_snippets.txt"
 
 
 @dataclass(frozen=True)
@@ -231,6 +232,17 @@ def _build_word_packs() -> dict[str, WordPack]:
             description=f"Real Java code -- open-source snippets ({len(java_snippets)} snippets)",
             words=tuple(java_tokens),
             snippets=java_snippets,
+        )
+    go_snippets = _load_snippets(GO_SNIPPETS_FILE)
+    if go_snippets:
+        go_tokens: list[str] = []
+        for s in go_snippets:
+            go_tokens.extend(s.split())
+        packs["go-code"] = WordPack(
+            name="go-code",
+            description=f"Real Go code -- open-source snippets ({len(go_snippets)} snippets)",
+            words=tuple(go_tokens),
+            snippets=go_snippets,
         )
     return packs
 
@@ -580,7 +592,7 @@ _MENU_CODE_LANGS = [
     ("Python", "python-code", True),
     ("JavaScript", "javascript-code", True),
     ("Rust", "rust-code", False),
-    ("Go", "go-code", False),
+    ("Go", "go-code", True),
     ("TypeScript", "typescript-code", False),
     ("Java", "java-code", True),
 ]
