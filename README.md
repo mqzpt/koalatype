@@ -19,7 +19,9 @@ koalatype                                    # interactive setup menu
 koalatype --pack python-code                 # real Python snippets with indentation
 koalatype --pack javascript-code --zen       # no timer, Esc when done
 koalatype --pack java-code --time 60         # 60 second test
-koalatype --pack rust --time 60              # Rust keywords
+koalatype --pack rust-code --time 60         # real Rust code
+koalatype --pack go-code --time 60           # real Go code
+koalatype --pack typescript-code --time 60   # real TypeScript code
 koalatype --difficulty hard --time 120       # long words only
 koalatype --file ~/mywords.txt --words 20    # custom word list
 koalatype --list                             # show all packs
@@ -37,10 +39,14 @@ Running `koalatype` with no arguments launches an interactive menu where you pic
 | `python-code` | Real Python code — 94 snippets |
 | `javascript` | JavaScript keywords |
 | `javascript-code` | Real JavaScript code — 92 snippets |
+| `typescript` | TypeScript keywords |
+| `typescript-code` | Real TypeScript code — 107 snippets |
 | `java` | Java keywords |
 | `java-code` | Real Java code — 107 snippets |
 | `rust` | Rust keywords |
+| `rust-code` | Real Rust code — 104 snippets |
 | `go` | Go keywords |
+| `go-code` | Real Go code — 101 snippets |
 | `sql` | SQL keywords |
 
 `--difficulty easy/medium/hard` filters by word length (<=4, 5-7, 8+ chars). Works with any word pack.
@@ -49,7 +55,7 @@ Running `koalatype` with no arguments launches an interactive menu where you pic
 
 ## Code Mode
 
-Code packs (`python-code`, `javascript-code`, `java-code`) have you type real functions instead of random words:
+Code packs have you type real functions instead of random words:
 
 ```
 def two_sum(nums, target):
@@ -66,7 +72,7 @@ def two_sum(nums, target):
 - **Backspace** goes back through chars, words, and up to previous lines
 - **Esc** exits the test early and scores what you've typed
 
-293 code snippets across three languages covering sorting, searching, dynamic programming, graph algorithms, data structures, and more.
+605 code snippets across six languages covering sorting, searching, dynamic programming, graph algorithms, data structures, and more.
 
 ## Features
 
@@ -92,7 +98,6 @@ difficulty = "medium"
 
 ## Future
 
-- More code packs: Rust, Go, TypeScript
 - Quote mode
 - Themes / color schemes
 - Multiplayer
@@ -105,4 +110,7 @@ difficulty = "medium"
 **Code snippets sourced from:**
 - Python — LeetCode editorial solutions, [TheAlgorithms/Python](https://github.com/TheAlgorithms/Python)
 - JavaScript — [trekhleb/javascript-algorithms](https://github.com/trekhleb/javascript-algorithms), [30secondsofcode.org](https://www.30secondsofcode.org), [TheAlgorithms/JavaScript](https://github.com/TheAlgorithms/JavaScript)
+- TypeScript — [TheAlgorithms/TypeScript](https://github.com/TheAlgorithms/TypeScript)
 - Java — [TheAlgorithms/Java](https://github.com/TheAlgorithms/Java)
+- Go — [TheAlgorithms/Go](https://github.com/TheAlgorithms/Go)
+- Rust — [TheAlgorithms/Rust](https://github.com/TheAlgorithms/Rust)
