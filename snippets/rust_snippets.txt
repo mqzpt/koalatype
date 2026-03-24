@@ -1,0 +1,1672 @@
+# Bubble Sort
+fn bubble_sort<T: Ord>(arr: &mut [T]) {
+    if arr.is_empty() {
+        return;
+    }
+    let mut sorted = false;
+    let mut n = arr.len();
+    while !sorted {
+        sorted = true;
+        for i in 0..n - 1 {
+            if arr[i] > arr[i + 1] {
+                arr.swap(i, i + 1);
+                sorted = false;
+            }
+        }
+        n -= 1;
+    }
+}
+---
+# Insertion Sort
+fn insertion_sort<T: Ord + Copy>(arr: &mut [T]) {
+    for i in 1..arr.len() {
+        let mut j = i;
+        let cur = arr[i];
+        while j > 0 && cur < arr[j - 1] {
+            arr[j] = arr[j - 1];
+            j -= 1;
+        }
+        arr[j] = cur;
+    }
+}
+---
+# Selection Sort
+fn selection_sort<T: Ord>(arr: &mut [T]) {
+    let len = arr.len();
+    for left in 0..len {
+        let mut smallest = left;
+        for right in (left + 1)..len {
+            if arr[right] < arr[smallest] {
+                smallest = right;
+            }
+        }
+        arr.swap(smallest, left);
+    }
+}
+---
+# Merge Sort
+fn merge<T: Ord + Copy>(arr: &mut [T], mid: usize) {
+    let left_half = arr[..mid].to_vec();
+    let right_half = arr[mid..].to_vec();
+    let mut l = 0;
+    let mut r = 0;
+    for v in arr {
+        if r == right_half.len() || (l < left_half.len() && left_half[l] < right_half[r]) {
+            *v = left_half[l];
+            l += 1;
+        } else {
+            *v = right_half[r];
+            r += 1;
+        }
+    }
+}
+---
+# Merge Sort Recursive
+fn top_down_merge_sort<T: Ord + Copy>(arr: &mut [T]) {
+    if arr.len() > 1 {
+        let mid = arr.len() / 2;
+        top_down_merge_sort(&mut arr[..mid]);
+        top_down_merge_sort(&mut arr[mid..]);
+        merge(arr, mid);
+    }
+}
+---
+# Quick Sort Partition
+fn partition<T: PartialOrd>(arr: &mut [T], lo: usize, hi: usize) -> usize {
+    let pivot = hi;
+    let mut i = lo;
+    let mut j = hi - 1;
+    loop {
+        while arr[i] < arr[pivot] {
+            i += 1;
+        }
+        while j > 0 && arr[j] > arr[pivot] {
+            j -= 1;
+        }
+        if j == 0 || i >= j {
+            break;
+        } else if arr[i] == arr[j] {
+            i += 1;
+            j -= 1;
+        } else {
+            arr.swap(i, j);
+        }
+    }
+    arr.swap(i, pivot);
+    i
+}
+---
+# Quick Sort
+fn quick_sort<T: Ord>(arr: &mut [T]) {
+    let len = arr.len();
+    if len > 1 {
+        _quick_sort(arr, 0, len - 1);
+    }
+}
+---
+# Heap Sort Heapify
+fn heapify<T: Ord>(arr: &mut [T], i: usize, is_max: bool) {
+    let mut idx = i;
+    let l = 2 * i + 1;
+    let r = 2 * i + 2;
+    if l < arr.len() && (is_max && arr[l] > arr[idx] || !is_max && arr[l] < arr[idx]) {
+        idx = l;
+    }
+    if r < arr.len() && (is_max && arr[r] > arr[idx] || !is_max && arr[r] < arr[idx]) {
+        idx = r;
+    }
+    if idx != i {
+        arr.swap(i, idx);
+        heapify(arr, idx, is_max);
+    }
+}
+---
+# Shell Sort
+fn shell_sort<T: Ord + Copy>(values: &mut [T]) {
+    let mut gap = values.len() / 2;
+    while gap > 0 {
+        for i in gap..values.len() {
+            let temp = values[i];
+            let mut j = i;
+            while j >= gap && values[j - gap] > temp {
+                values[j] = values[j - gap];
+                j -= gap;
+            }
+            values[j] = temp;
+        }
+        gap /= 2;
+    }
+}
+---
+# Cocktail Shaker Sort
+fn cocktail_shaker_sort<T: Ord>(arr: &mut [T]) {
+    let len = arr.len();
+    if len == 0 {
+        return;
+    }
+    loop {
+        let mut swapped = false;
+        for i in 0..len - 1 {
+            if arr[i] > arr[i + 1] {
+                arr.swap(i, i + 1);
+                swapped = true;
+            }
+        }
+        if !swapped {
+            break;
+        }
+        swapped = false;
+        for i in (0..len - 1).rev() {
+            if arr[i] > arr[i + 1] {
+                arr.swap(i, i + 1);
+                swapped = true;
+            }
+        }
+        if !swapped {
+            break;
+        }
+    }
+}
+---
+# Counting Sort
+fn counting_sort(arr: &mut [u32], maxval: usize) {
+    let mut occurrences: Vec<usize> = vec![0; maxval + 1];
+    for &data in arr.iter() {
+        occurrences[data as usize] += 1;
+    }
+    let mut i = 0;
+    for (data, &number) in occurrences.iter().enumerate() {
+        for _ in 0..number {
+            arr[i] = data as u32;
+            i += 1;
+        }
+    }
+}
+---
+# Radix Sort
+fn radix_sort(arr: &mut [u64]) {
+    let max: usize = match arr.iter().max() {
+        Some(&x) => x as usize,
+        None => return,
+    };
+    let radix = arr.len().next_power_of_two();
+    let mut place = 1;
+    while place <= max {
+        let digit_of = |x| x as usize / place % radix;
+        let mut counter = vec![0; radix];
+        for &x in arr.iter() {
+            counter[digit_of(x)] += 1;
+        }
+        for i in 1..radix {
+            counter[i] += counter[i - 1];
+        }
+        for &x in arr.to_owned().iter().rev() {
+            counter[digit_of(x)] -= 1;
+            arr[counter[digit_of(x)]] = x;
+        }
+        place *= radix;
+    }
+}
+---
+# Binary Search
+fn binary_search<T: Ord>(item: &T, arr: &[T]) -> Option<usize> {
+    let mut left = 0;
+    let mut right = arr.len();
+    while left < right {
+        let mid = left + (right - left) / 2;
+        match item.cmp(&arr[mid]) {
+            std::cmp::Ordering::Equal => return Some(mid),
+            std::cmp::Ordering::Less => right = mid,
+            std::cmp::Ordering::Greater => left = mid + 1,
+        }
+    }
+    None
+}
+---
+# Linear Search
+fn linear_search<T: Ord>(item: &T, arr: &[T]) -> Option<usize> {
+    for (i, data) in arr.iter().enumerate() {
+        if item == data {
+            return Some(i);
+        }
+    }
+    None
+}
+---
+# Jump Search
+fn jump_search<T: Ord>(item: &T, arr: &[T]) -> Option<usize> {
+    let len = arr.len();
+    if len == 0 {
+        return None;
+    }
+    let mut step = (len as f64).sqrt() as usize;
+    let mut prev = 0;
+    while &arr[std::cmp::min(len, step) - 1] < item {
+        prev = step;
+        step += (len as f64).sqrt() as usize;
+        if prev >= len {
+            return None;
+        }
+    }
+    while &arr[prev] < item {
+        prev += 1;
+    }
+    if &arr[prev] == item {
+        return Some(prev);
+    }
+    None
+}
+---
+# GCD Recursive
+fn gcd(a: i64, b: i64) -> i64 {
+    if a == 0 {
+        b.abs()
+    } else {
+        gcd(b % a, a)
+    }
+}
+---
+# GCD Iterative
+fn gcd_iterative(mut a: i64, mut b: i64) -> i64 {
+    while a != 0 {
+        let remainder = b % a;
+        b = a;
+        a = remainder;
+    }
+    b.abs()
+}
+---
+# GCD Stein's Algorithm
+fn gcd_stein(a: u64, b: u64) -> u64 {
+    match ((a, b), (a & 1, b & 1)) {
+        ((x, y), _) if x == y => y,
+        ((0, x), _) | ((x, 0), _) => x,
+        ((x, y), (0, 1)) | ((y, x), (1, 0)) => gcd_stein(x >> 1, y),
+        ((x, y), (0, 0)) => gcd_stein(x >> 1, y >> 1) << 1,
+        ((x, y), (1, 1)) => {
+            let (x, y) = (std::cmp::min(x, y), std::cmp::max(x, y));
+            gcd_stein((y - x) >> 1, x)
+        }
+        _ => unreachable!(),
+    }
+}
+---
+# Fast Power (Modular Exponentiation)
+fn fast_power(mut base: usize, mut power: usize, modulus: usize) -> usize {
+    let mut res = 1;
+    while power > 0 {
+        if power & 1 == 1 {
+            res = (res * base) % modulus;
+        }
+        base = (base * base) % modulus;
+        power >>= 1;
+    }
+    res
+}
+---
+# Prime Check
+fn is_prime(num: usize) -> bool {
+    if num > 1 && num < 4 {
+        return true;
+    } else if num < 2 || num % 2 == 0 {
+        return false;
+    }
+    let stop = (num as f64).sqrt() as usize + 1;
+    for i in (3..stop).step_by(2) {
+        if num % i == 0 {
+            return false;
+        }
+    }
+    true
+}
+---
+# Prime Numbers Up To N
+fn prime_numbers(max: usize) -> Vec<usize> {
+    let mut result: Vec<usize> = Vec::new();
+    if max >= 2 {
+        result.push(2);
+    }
+    for i in (3..=max).step_by(2) {
+        let stop = (i as f64).sqrt() as usize + 1;
+        let mut is_prime = true;
+        for j in (3..stop).step_by(2) {
+            if i % j == 0 {
+                is_prime = false;
+                break;
+            }
+        }
+        if is_prime {
+            result.push(i);
+        }
+    }
+    result
+}
+---
+# Sieve of Eratosthenes
+fn sieve_of_eratosthenes(num: usize) -> Vec<usize> {
+    let mut sieve = vec![true; num + 1];
+    sieve[0] = false;
+    if num > 0 {
+        sieve[1] = false;
+    }
+    let end = (num as f64).sqrt() as usize;
+    for start in 2..=end {
+        if sieve[start] {
+            for i in (start * start..=num).step_by(start) {
+                sieve[i] = false;
+            }
+        }
+    }
+    (2..=num).filter(|&i| sieve[i]).collect()
+}
+---
+# Fibonacci Iterative
+fn fibonacci(n: usize) -> u64 {
+    let mut a: u64 = 0;
+    let mut b: u64 = 1;
+    for _ in 0..n {
+        let temp = b;
+        b = a + b;
+        a = temp;
+    }
+    a
+}
+---
+# Maximum Subarray (Kadane's Algorithm)
+fn maximum_subarray(array: &[isize]) -> Option<isize> {
+    if array.is_empty() {
+        return None;
+    }
+    let mut cur_sum = array[0];
+    let mut max_sum = cur_sum;
+    for &x in &array[1..] {
+        cur_sum = (cur_sum + x).max(x);
+        max_sum = max_sum.max(cur_sum);
+    }
+    Some(max_sum)
+}
+---
+# Coin Change Problem
+fn coin_change(coins: &[usize], amount: usize) -> Option<usize> {
+    let mut min_coins = vec![None; amount + 1];
+    min_coins[0] = Some(0);
+    for curr in 0..=amount {
+        for &coin in coins.iter().filter(|&&c| curr >= c) {
+            if let Some(prev) = min_coins[curr - coin] {
+                min_coins[curr] = Some(
+                    min_coins[curr].map_or(prev + 1, |cur| cur.min(prev + 1)),
+                );
+            }
+        }
+    }
+    min_coins[amount]
+}
+---
+# Egg Drop Problem
+fn egg_drop(eggs: usize, floors: usize) -> Option<usize> {
+    if eggs == 0 {
+        return None;
+    }
+    if eggs == 1 || floors <= 1 {
+        return Some(floors);
+    }
+    let mut dp = vec![vec![0; floors + 1]; eggs + 1];
+    for i in 1..=eggs {
+        dp[i][1] = 1;
+    }
+    for j in 1..=floors {
+        dp[1][j] = j;
+    }
+    for i in 2..=eggs {
+        for j in 2..=floors {
+            dp[i][j] = (1..=j)
+                .map(|k| 1 + std::cmp::max(dp[i - 1][k - 1], dp[i][j - k]))
+                .min()
+                .unwrap();
+        }
+    }
+    Some(dp[eggs][floors])
+}
+---
+# Rod Cutting
+fn rod_cut(prices: &[usize]) -> usize {
+    if prices.is_empty() {
+        return 0;
+    }
+    let n = prices.len();
+    let mut max_profit = vec![0; n + 1];
+    for length in 1..=n {
+        for cut in 1..=length {
+            max_profit[length] = std::cmp::max(
+                max_profit[length],
+                prices[cut - 1] + max_profit[length - cut],
+            );
+        }
+    }
+    max_profit[n]
+}
+---
+# Longest Common Subsequence Length
+fn lcs_length(a: &str, b: &str) -> usize {
+    let a: Vec<char> = a.chars().collect();
+    let b: Vec<char> = b.chars().collect();
+    let mut dp = vec![vec![0; b.len() + 1]; a.len() + 1];
+    for i in 1..=a.len() {
+        for j in 1..=b.len() {
+            dp[i][j] = if a[i - 1] == b[j - 1] {
+                dp[i - 1][j - 1] + 1
+            } else {
+                dp[i - 1][j].max(dp[i][j - 1])
+            };
+        }
+    }
+    dp[a.len()][b.len()]
+}
+---
+# Edit Distance (Levenshtein)
+fn edit_distance(a: &str, b: &str) -> usize {
+    let a: Vec<char> = a.chars().collect();
+    let b: Vec<char> = b.chars().collect();
+    let mut dp = vec![vec![0; b.len() + 1]; a.len() + 1];
+    for i in 0..=a.len() {
+        dp[i][0] = i;
+    }
+    for j in 0..=b.len() {
+        dp[0][j] = j;
+    }
+    for i in 1..=a.len() {
+        for j in 1..=b.len() {
+            dp[i][j] = if a[i - 1] == b[j - 1] {
+                dp[i - 1][j - 1]
+            } else {
+                1 + dp[i - 1][j - 1].min(dp[i - 1][j]).min(dp[i][j - 1])
+            };
+        }
+    }
+    dp[a.len()][b.len()]
+}
+---
+# Climbing Stairs
+fn climb_stairs(n: usize) -> usize {
+    if n <= 2 {
+        return n;
+    }
+    let mut a = 1;
+    let mut b = 2;
+    for _ in 3..=n {
+        let temp = b;
+        b = a + b;
+        a = temp;
+    }
+    b
+}
+---
+# 0/1 Knapsack
+fn knapsack(capacity: usize, weights: &[usize], values: &[usize]) -> usize {
+    let n = weights.len();
+    let mut dp = vec![vec![0; capacity + 1]; n + 1];
+    for i in 1..=n {
+        for w in 0..=capacity {
+            dp[i][w] = if weights[i - 1] <= w {
+                std::cmp::max(
+                    values[i - 1] + dp[i - 1][w - weights[i - 1]],
+                    dp[i - 1][w],
+                )
+            } else {
+                dp[i - 1][w]
+            };
+        }
+    }
+    dp[n][capacity]
+}
+---
+# Longest Increasing Subsequence Length
+fn lis_length(arr: &[i32]) -> usize {
+    let mut tails: Vec<i32> = Vec::new();
+    for &x in arr {
+        match tails.binary_search(&x) {
+            Ok(_) => {}
+            Err(pos) => {
+                if pos == tails.len() {
+                    tails.push(x);
+                } else {
+                    tails[pos] = x;
+                }
+            }
+        }
+    }
+    tails.len()
+}
+---
+# Reverse String
+fn reverse(text: &str) -> String {
+    text.chars().rev().collect()
+}
+---
+# Palindrome Check
+fn is_palindrome(s: &str) -> bool {
+    let mut chars = s
+        .chars()
+        .filter(|c| c.is_alphanumeric())
+        .map(|c| c.to_ascii_lowercase());
+    while let (Some(c1), Some(c2)) = (chars.next(), chars.next_back()) {
+        if c1 != c2 {
+            return false;
+        }
+    }
+    true
+}
+---
+# Hamming Distance
+fn hamming_distance(a: &str, b: &str) -> Result<usize, &'static str> {
+    if a.len() != b.len() {
+        return Err("strings must have equal length");
+    }
+    let distance = a
+        .chars()
+        .zip(b.chars())
+        .filter(|(a, b)| a != b)
+        .count();
+    Ok(distance)
+}
+---
+# KMP Prefix Table
+fn build_prefix_table(pattern: &[char]) -> Vec<usize> {
+    let mut table = vec![0];
+    for (i, &ch) in pattern.iter().enumerate().skip(1) {
+        let mut len = table[i - 1];
+        while len > 0 && pattern[len] != ch {
+            len = table[len - 1];
+        }
+        table.push(if pattern[len] == ch { len + 1 } else { len });
+    }
+    table
+}
+---
+# Count Set Bits (Brian Kernighan)
+fn count_set_bits(mut n: usize) -> usize {
+    let mut count = 0;
+    while n > 0 {
+        n &= n - 1;
+        count += 1;
+    }
+    count
+}
+---
+# Power of Two Check
+fn is_power_of_two(n: u64) -> bool {
+    n > 0 && (n & (n - 1)) == 0
+}
+---
+# Single Number (XOR)
+fn single_number(nums: &[i32]) -> i32 {
+    nums.iter().fold(0, |acc, &x| acc ^ x)
+}
+---
+# Reverse Bits
+fn reverse_bits(mut n: u32) -> u32 {
+    let mut result: u32 = 0;
+    for _ in 0..32 {
+        result = (result << 1) | (n & 1);
+        n >>= 1;
+    }
+    result
+}
+---
+# Hamming Weight
+fn hamming_weight(mut n: u32) -> u32 {
+    let mut count = 0;
+    while n != 0 {
+        count += n & 1;
+        n >>= 1;
+    }
+    count
+}
+---
+# Bit Manipulation: Set, Clear, Toggle
+fn set_bit(n: u32, pos: u32) -> u32 {
+    n | (1 << pos)
+}
+
+fn clear_bit(n: u32, pos: u32) -> u32 {
+    n & !(1 << pos)
+}
+
+fn toggle_bit(n: u32, pos: u32) -> u32 {
+    n ^ (1 << pos)
+}
+---
+# BFS Traversal
+fn bfs(graph: &Vec<Vec<usize>>, start: usize) -> Vec<usize> {
+    let mut visited = vec![false; graph.len()];
+    let mut queue = std::collections::VecDeque::new();
+    let mut order = Vec::new();
+    visited[start] = true;
+    queue.push_back(start);
+    while let Some(node) = queue.pop_front() {
+        order.push(node);
+        for &neighbor in &graph[node] {
+            if !visited[neighbor] {
+                visited[neighbor] = true;
+                queue.push_back(neighbor);
+            }
+        }
+    }
+    order
+}
+---
+# DFS Traversal
+fn dfs(graph: &Vec<Vec<usize>>, start: usize) -> Vec<usize> {
+    let mut visited = vec![false; graph.len()];
+    let mut stack = vec![start];
+    let mut order = Vec::new();
+    while let Some(node) = stack.pop() {
+        if visited[node] {
+            continue;
+        }
+        visited[node] = true;
+        order.push(node);
+        for &neighbor in graph[node].iter().rev() {
+            if !visited[neighbor] {
+                stack.push(neighbor);
+            }
+        }
+    }
+    order
+}
+---
+# DFS Recursive
+fn dfs_recursive(graph: &Vec<Vec<usize>>, node: usize, visited: &mut Vec<bool>, order: &mut Vec<usize>) {
+    visited[node] = true;
+    order.push(node);
+    for &neighbor in &graph[node] {
+        if !visited[neighbor] {
+            dfs_recursive(graph, neighbor, visited, order);
+        }
+    }
+}
+---
+# Topological Sort (Kahn's Algorithm)
+fn topological_sort(graph: &Vec<Vec<usize>>, n: usize) -> Vec<usize> {
+    let mut in_degree = vec![0usize; n];
+    for edges in graph {
+        for &v in edges {
+            in_degree[v] += 1;
+        }
+    }
+    let mut queue: std::collections::VecDeque<usize> = in_degree
+        .iter()
+        .enumerate()
+        .filter(|(_, &d)| d == 0)
+        .map(|(i, _)| i)
+        .collect();
+    let mut order = Vec::new();
+    while let Some(node) = queue.pop_front() {
+        order.push(node);
+        for &neighbor in &graph[node] {
+            in_degree[neighbor] -= 1;
+            if in_degree[neighbor] == 0 {
+                queue.push_back(neighbor);
+            }
+        }
+    }
+    order
+}
+---
+# Dijkstra's Shortest Path
+fn dijkstra(graph: &Vec<Vec<(usize, u64)>>, start: usize) -> Vec<u64> {
+    let n = graph.len();
+    let mut dist = vec![u64::MAX; n];
+    let mut heap = std::collections::BinaryHeap::new();
+    dist[start] = 0;
+    heap.push(std::cmp::Reverse((0u64, start)));
+    while let Some(std::cmp::Reverse((cost, u))) = heap.pop() {
+        if cost > dist[u] {
+            continue;
+        }
+        for &(v, w) in &graph[u] {
+            let next = cost + w;
+            if next < dist[v] {
+                dist[v] = next;
+                heap.push(std::cmp::Reverse((next, v)));
+            }
+        }
+    }
+    dist
+}
+---
+# Union-Find (Disjoint Set)
+struct UnionFind {
+    parent: Vec<usize>,
+    rank: Vec<usize>,
+}
+
+impl UnionFind {
+    fn new(n: usize) -> Self {
+        Self {
+            parent: (0..n).collect(),
+            rank: vec![0; n],
+        }
+    }
+
+    fn find(&mut self, x: usize) -> usize {
+        if self.parent[x] != x {
+            self.parent[x] = self.find(self.parent[x]);
+        }
+        self.parent[x]
+    }
+
+    fn union(&mut self, x: usize, y: usize) {
+        let rx = self.find(x);
+        let ry = self.find(y);
+        if rx == ry {
+            return;
+        }
+        match self.rank[rx].cmp(&self.rank[ry]) {
+            std::cmp::Ordering::Less => self.parent[rx] = ry,
+            std::cmp::Ordering::Greater => self.parent[ry] = rx,
+            std::cmp::Ordering::Equal => {
+                self.parent[ry] = rx;
+                self.rank[rx] += 1;
+            }
+        }
+    }
+}
+---
+# Linked List Stack
+struct Node<T> {
+    elem: T,
+    next: Option<Box<Node<T>>>,
+}
+
+struct Stack<T> {
+    head: Option<Box<Node<T>>>,
+}
+
+impl<T> Stack<T> {
+    fn new() -> Self {
+        Self { head: None }
+    }
+
+    fn push(&mut self, elem: T) {
+        let new_node = Box::new(Node {
+            elem,
+            next: self.head.take(),
+        });
+        self.head = Some(new_node);
+    }
+
+    fn pop(&mut self) -> Option<T> {
+        self.head.take().map(|node| {
+            self.head = node.next;
+            node.elem
+        })
+    }
+}
+---
+# Stack Peek and Is Empty
+impl<T> Stack<T> {
+    fn is_empty(&self) -> bool {
+        self.head.is_none()
+    }
+
+    fn peek(&self) -> Option<&T> {
+        self.head.as_ref().map(|node| &node.elem)
+    }
+
+    fn peek_mut(&mut self) -> Option<&mut T> {
+        self.head.as_mut().map(|node| &mut node.elem)
+    }
+}
+---
+# BST Insert
+fn bst_insert<T: Ord>(root: &mut Option<Box<TreeNode<T>>>, value: T) {
+    match root {
+        None => {
+            *root = Some(Box::new(TreeNode {
+                value,
+                left: None,
+                right: None,
+            }));
+        }
+        Some(node) => {
+            if value < node.value {
+                bst_insert(&mut node.left, value);
+            } else {
+                bst_insert(&mut node.right, value);
+            }
+        }
+    }
+}
+---
+# BST Search
+fn bst_search<T: Ord>(root: &Option<Box<TreeNode<T>>>, value: &T) -> bool {
+    match root {
+        None => false,
+        Some(node) => match value.cmp(&node.value) {
+            std::cmp::Ordering::Equal => true,
+            std::cmp::Ordering::Less => bst_search(&node.left, value),
+            std::cmp::Ordering::Greater => bst_search(&node.right, value),
+        },
+    }
+}
+---
+# BST Min and Max
+fn bst_min<T>(root: &Option<Box<TreeNode<T>>>) -> Option<&T> {
+    match root {
+        None => None,
+        Some(node) => match &node.left {
+            Some(_) => bst_min(&node.left),
+            None => Some(&node.value),
+        },
+    }
+}
+
+fn bst_max<T>(root: &Option<Box<TreeNode<T>>>) -> Option<&T> {
+    match root {
+        None => None,
+        Some(node) => match &node.right {
+            Some(_) => bst_max(&node.right),
+            None => Some(&node.value),
+        },
+    }
+}
+---
+# Stack Drop (Avoid Stack Overflow)
+impl<T> Drop for Stack<T> {
+    fn drop(&mut self) {
+        let mut cur_link = self.head.take();
+        while let Some(mut boxed_node) = cur_link {
+            cur_link = boxed_node.next.take();
+        }
+    }
+}
+---
+# Into Iterator for Stack
+struct IntoIter<T>(Stack<T>);
+
+impl<T> Iterator for IntoIter<T> {
+    type Item = T;
+    fn next(&mut self) -> Option<Self::Item> {
+        self.0.pop()
+    }
+}
+
+impl<T> Stack<T> {
+    fn into_iter(self) -> IntoIter<T> {
+        IntoIter(self)
+    }
+}
+---
+# Borrowing Iterator for Stack
+struct Iter<'a, T> {
+    next: Option<&'a Node<T>>,
+}
+
+impl<'a, T> Iterator for Iter<'a, T> {
+    type Item = &'a T;
+    fn next(&mut self) -> Option<Self::Item> {
+        self.next.map(|node| {
+            self.next = node.next.as_deref();
+            &node.elem
+        })
+    }
+}
+---
+# Two Sum with HashMap
+fn two_sum(nums: &[i32], target: i32) -> Option<(usize, usize)> {
+    let mut seen = std::collections::HashMap::new();
+    for (i, &num) in nums.iter().enumerate() {
+        let diff = target - num;
+        if let Some(&j) = seen.get(&diff) {
+            return Some((j, i));
+        }
+        seen.insert(num, i);
+    }
+    None
+}
+---
+# Valid Parentheses
+fn is_valid_parens(s: &str) -> bool {
+    let mut stack = Vec::new();
+    for ch in s.chars() {
+        match ch {
+            '(' => stack.push(')'),
+            '{' => stack.push('}'),
+            '[' => stack.push(']'),
+            ')' | '}' | ']' => {
+                if stack.pop() != Some(ch) {
+                    return false;
+                }
+            }
+            _ => {}
+        }
+    }
+    stack.is_empty()
+}
+---
+# Contains Duplicate
+fn contains_duplicate(nums: &[i32]) -> bool {
+    let mut seen = std::collections::HashSet::new();
+    nums.iter().any(|x| !seen.insert(x))
+}
+---
+# Max Profit (Buy and Sell Stock)
+fn max_profit(prices: &[i32]) -> i32 {
+    let mut min_price = i32::MAX;
+    let mut profit = 0;
+    for &price in prices {
+        min_price = min_price.min(price);
+        profit = profit.max(price - min_price);
+    }
+    profit
+}
+---
+# Roman to Integer
+fn roman_to_int(s: &str) -> i32 {
+    let value = |c| match c {
+        'I' => 1, 'V' => 5, 'X' => 10, 'L' => 50,
+        'C' => 100, 'D' => 500, 'M' => 1000, _ => 0,
+    };
+    let chars: Vec<char> = s.chars().collect();
+    let mut total = 0;
+    for i in 0..chars.len() {
+        if i + 1 < chars.len() && value(chars[i]) < value(chars[i + 1]) {
+            total -= value(chars[i]);
+        } else {
+            total += value(chars[i]);
+        }
+    }
+    total
+}
+---
+# Matrix Transpose
+fn transpose(matrix: &Vec<Vec<i32>>) -> Vec<Vec<i32>> {
+    if matrix.is_empty() {
+        return vec![];
+    }
+    let rows = matrix.len();
+    let cols = matrix[0].len();
+    let mut result = vec![vec![0; rows]; cols];
+    for i in 0..rows {
+        for j in 0..cols {
+            result[j][i] = matrix[i][j];
+        }
+    }
+    result
+}
+---
+# Flatten Nested Vec
+fn flatten<T: Clone>(nested: &[Vec<T>]) -> Vec<T> {
+    nested.iter().flat_map(|v| v.iter().cloned()).collect()
+}
+---
+# Group By Key
+fn group_by<T, K, F>(items: Vec<T>, key_fn: F) -> std::collections::HashMap<K, Vec<T>>
+where
+    K: std::hash::Hash + Eq,
+    F: Fn(&T) -> K,
+{
+    let mut groups = std::collections::HashMap::new();
+    for item in items {
+        groups.entry(key_fn(&item)).or_insert_with(Vec::new).push(item);
+    }
+    groups
+}
+---
+# Frequency Counter
+fn frequency_count<T: std::hash::Hash + Eq>(items: &[T]) -> std::collections::HashMap<&T, usize> {
+    let mut counts = std::collections::HashMap::new();
+    for item in items {
+        *counts.entry(item).or_insert(0) += 1;
+    }
+    counts
+}
+---
+# Option Map and Unwrap Patterns
+fn divide(a: f64, b: f64) -> Option<f64> {
+    if b == 0.0 {
+        None
+    } else {
+        Some(a / b)
+    }
+}
+
+fn safe_divide_chain(a: f64, b: f64, c: f64) -> Option<f64> {
+    divide(a, b).and_then(|result| divide(result, c))
+}
+---
+# Result Error Propagation
+fn parse_and_double(input: &str) -> Result<i64, std::num::ParseIntError> {
+    let parsed: i64 = input.trim().parse()?;
+    Ok(parsed * 2)
+}
+
+fn parse_sum(a: &str, b: &str) -> Result<i64, std::num::ParseIntError> {
+    let x: i64 = a.trim().parse()?;
+    let y: i64 = b.trim().parse()?;
+    Ok(x + y)
+}
+---
+# Custom Error Enum
+#[derive(Debug)]
+enum AppError {
+    NotFound(String),
+    ParseFailed(std::num::ParseIntError),
+    InvalidInput(String),
+}
+
+impl std::fmt::Display for AppError {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            AppError::NotFound(msg) => write!(f, "not found: {}", msg),
+            AppError::ParseFailed(e) => write!(f, "parse error: {}", e),
+            AppError::InvalidInput(msg) => write!(f, "invalid: {}", msg),
+        }
+    }
+}
+---
+# Pattern Matching on Enums
+enum Shape {
+    Circle(f64),
+    Rectangle(f64, f64),
+    Triangle(f64, f64),
+}
+
+fn area(shape: &Shape) -> f64 {
+    match shape {
+        Shape::Circle(r) => std::f64::consts::PI * r * r,
+        Shape::Rectangle(w, h) => w * h,
+        Shape::Triangle(b, h) => 0.5 * b * h,
+    }
+}
+---
+# Trait Implementation
+trait Summary {
+    fn summarize(&self) -> String;
+
+    fn preview(&self) -> String {
+        format!("{}...", &self.summarize()[..20.min(self.summarize().len())])
+    }
+}
+
+struct Article {
+    title: String,
+    content: String,
+}
+
+impl Summary for Article {
+    fn summarize(&self) -> String {
+        format!("{}: {}", self.title, self.content)
+    }
+}
+---
+# Generic Max Function
+fn max_of_three<T: PartialOrd>(a: T, b: T, c: T) -> T {
+    if a >= b && a >= c {
+        a
+    } else if b >= c {
+        b
+    } else {
+        c
+    }
+}
+---
+# Iterator Chaining
+fn process_numbers(data: &[i32]) -> Vec<i32> {
+    data.iter()
+        .filter(|&&x| x > 0)
+        .map(|&x| x * x)
+        .filter(|&x| x < 1000)
+        .collect()
+}
+---
+# Iterator Fold and Reduce
+fn sum_of_squares(nums: &[i32]) -> i32 {
+    nums.iter().map(|&x| x * x).sum()
+}
+
+fn product(nums: &[i32]) -> i64 {
+    nums.iter().fold(1i64, |acc, &x| acc * x as i64)
+}
+
+fn running_max(nums: &[i32]) -> Vec<i32> {
+    nums.iter()
+        .scan(i32::MIN, |max, &x| {
+            *max = (*max).max(x);
+            Some(*max)
+        })
+        .collect()
+}
+---
+# Zip and Enumerate Patterns
+fn dot_product(a: &[f64], b: &[f64]) -> f64 {
+    a.iter().zip(b.iter()).map(|(x, y)| x * y).sum()
+}
+
+fn indexed_filter(data: &[i32]) -> Vec<(usize, i32)> {
+    data.iter()
+        .enumerate()
+        .filter(|(_, &val)| val > 0)
+        .map(|(i, &val)| (i, val))
+        .collect()
+}
+---
+# Closure as Parameter
+fn apply_twice<F: Fn(i32) -> i32>(f: F, x: i32) -> i32 {
+    f(f(x))
+}
+
+fn make_adder(n: i32) -> Box<dyn Fn(i32) -> i32> {
+    Box::new(move |x| x + n)
+}
+---
+# Memoized Fibonacci with HashMap
+fn fib_memo(n: u64, cache: &mut std::collections::HashMap<u64, u64>) -> u64 {
+    if n <= 1 {
+        return n;
+    }
+    if let Some(&val) = cache.get(&n) {
+        return val;
+    }
+    let result = fib_memo(n - 1, cache) + fib_memo(n - 2, cache);
+    cache.insert(n, result);
+    result
+}
+---
+# Min Stack
+struct MinStack {
+    stack: Vec<i32>,
+    min_stack: Vec<i32>,
+}
+
+impl MinStack {
+    fn new() -> Self {
+        Self {
+            stack: Vec::new(),
+            min_stack: Vec::new(),
+        }
+    }
+
+    fn push(&mut self, val: i32) {
+        self.stack.push(val);
+        let min = self.min_stack.last().map_or(val, |&m| m.min(val));
+        self.min_stack.push(min);
+    }
+
+    fn pop(&mut self) {
+        self.stack.pop();
+        self.min_stack.pop();
+    }
+
+    fn get_min(&self) -> Option<&i32> {
+        self.min_stack.last()
+    }
+}
+---
+# LRU Cache Fields
+struct LruCache<K, V> {
+    capacity: usize,
+    map: std::collections::HashMap<K, V>,
+    order: std::collections::VecDeque<K>,
+}
+
+impl<K: Eq + std::hash::Hash + Clone, V> LruCache<K, V> {
+    fn new(capacity: usize) -> Self {
+        Self {
+            capacity,
+            map: std::collections::HashMap::new(),
+            order: std::collections::VecDeque::new(),
+        }
+    }
+
+    fn get(&mut self, key: &K) -> Option<&V> {
+        if self.map.contains_key(key) {
+            self.order.retain(|k| k != key);
+            self.order.push_back(key.clone());
+            self.map.get(key)
+        } else {
+            None
+        }
+    }
+}
+---
+# Merge Two Sorted Slices
+fn merge_sorted(a: &[i32], b: &[i32]) -> Vec<i32> {
+    let mut result = Vec::with_capacity(a.len() + b.len());
+    let (mut i, mut j) = (0, 0);
+    while i < a.len() && j < b.len() {
+        if a[i] <= b[j] {
+            result.push(a[i]);
+            i += 1;
+        } else {
+            result.push(b[j]);
+            j += 1;
+        }
+    }
+    result.extend_from_slice(&a[i..]);
+    result.extend_from_slice(&b[j..]);
+    result
+}
+---
+# Rotate Array
+fn rotate_left<T: Clone>(arr: &[T], k: usize) -> Vec<T> {
+    let n = arr.len();
+    if n == 0 {
+        return vec![];
+    }
+    let k = k % n;
+    [&arr[k..], &arr[..k]].concat()
+}
+
+fn rotate_right<T: Clone>(arr: &[T], k: usize) -> Vec<T> {
+    let n = arr.len();
+    if n == 0 {
+        return vec![];
+    }
+    let k = k % n;
+    [&arr[n - k..], &arr[..n - k]].concat()
+}
+---
+# Chunk Iterator
+fn chunks<T: Clone>(data: &[T], size: usize) -> Vec<Vec<T>> {
+    data.chunks(size).map(|chunk| chunk.to_vec()).collect()
+}
+
+fn windows_sum(data: &[i32], size: usize) -> Vec<i32> {
+    data.windows(size).map(|w| w.iter().sum()).collect()
+}
+---
+# String Compression
+fn compress(s: &str) -> String {
+    let chars: Vec<char> = s.chars().collect();
+    let mut result = String::new();
+    let mut i = 0;
+    while i < chars.len() {
+        let ch = chars[i];
+        let mut count = 1;
+        while i + count < chars.len() && chars[i + count] == ch {
+            count += 1;
+        }
+        result.push(ch);
+        if count > 1 {
+            result.push_str(&count.to_string());
+        }
+        i += count;
+    }
+    result
+}
+---
+# Caesar Cipher
+fn caesar_encrypt(text: &str, shift: u8) -> String {
+    text.chars()
+        .map(|c| {
+            if c.is_ascii_lowercase() {
+                (b'a' + (c as u8 - b'a' + shift) % 26) as char
+            } else if c.is_ascii_uppercase() {
+                (b'A' + (c as u8 - b'A' + shift) % 26) as char
+            } else {
+                c
+            }
+        })
+        .collect()
+}
+---
+# Anagram Check
+fn is_anagram(a: &str, b: &str) -> bool {
+    let mut a_chars: Vec<char> = a.to_lowercase().chars().filter(|c| c.is_alphabetic()).collect();
+    let mut b_chars: Vec<char> = b.to_lowercase().chars().filter(|c| c.is_alphabetic()).collect();
+    a_chars.sort();
+    b_chars.sort();
+    a_chars == b_chars
+}
+---
+# Longest Substring Without Repeats
+fn length_of_longest_substring(s: &str) -> usize {
+    let mut seen = std::collections::HashMap::new();
+    let mut start = 0;
+    let mut max_len = 0;
+    for (i, ch) in s.chars().enumerate() {
+        if let Some(&prev) = seen.get(&ch) {
+            start = start.max(prev + 1);
+        }
+        seen.insert(ch, i);
+        max_len = max_len.max(i - start + 1);
+    }
+    max_len
+}
+---
+# Move Zeroes to End
+fn move_zeroes(nums: &mut Vec<i32>) {
+    let mut write = 0;
+    for read in 0..nums.len() {
+        if nums[read] != 0 {
+            nums.swap(write, read);
+            write += 1;
+        }
+    }
+}
+---
+# Remove Duplicates from Sorted Array
+fn remove_duplicates(nums: &mut Vec<i32>) -> usize {
+    if nums.is_empty() {
+        return 0;
+    }
+    let mut write = 1;
+    for read in 1..nums.len() {
+        if nums[read] != nums[write - 1] {
+            nums[write] = nums[read];
+            write += 1;
+        }
+    }
+    write
+}
+---
+# Merge Intervals
+fn merge_intervals(mut intervals: Vec<(i32, i32)>) -> Vec<(i32, i32)> {
+    intervals.sort_by_key(|&(start, _)| start);
+    let mut merged: Vec<(i32, i32)> = Vec::new();
+    for (start, end) in intervals {
+        if let Some(last) = merged.last_mut() {
+            if start <= last.1 {
+                last.1 = last.1.max(end);
+                continue;
+            }
+        }
+        merged.push((start, end));
+    }
+    merged
+}
+---
+# Implement Display Trait
+struct Point {
+    x: f64,
+    y: f64,
+}
+
+impl std::fmt::Display for Point {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "({}, {})", self.x, self.y)
+    }
+}
+
+impl Point {
+    fn distance(&self, other: &Point) -> f64 {
+        ((self.x - other.x).powi(2) + (self.y - other.y).powi(2)).sqrt()
+    }
+}
+---
+# From/Into Trait Implementation
+struct Celsius(f64);
+struct Fahrenheit(f64);
+
+impl From<Celsius> for Fahrenheit {
+    fn from(c: Celsius) -> Self {
+        Fahrenheit(c.0 * 9.0 / 5.0 + 32.0)
+    }
+}
+
+impl From<Fahrenheit> for Celsius {
+    fn from(f: Fahrenheit) -> Self {
+        Celsius((f.0 - 32.0) * 5.0 / 9.0)
+    }
+}
+---
+# Iterator Trait Implementation
+struct Counter {
+    start: u32,
+    end: u32,
+}
+
+impl Iterator for Counter {
+    type Item = u32;
+    fn next(&mut self) -> Option<Self::Item> {
+        if self.start < self.end {
+            let val = self.start;
+            self.start += 1;
+            Some(val)
+        } else {
+            None
+        }
+    }
+}
+---
+# Deref and Custom Smart Pointer
+struct MyBox<T>(T);
+
+impl<T> MyBox<T> {
+    fn new(x: T) -> MyBox<T> {
+        MyBox(x)
+    }
+}
+
+impl<T> std::ops::Deref for MyBox<T> {
+    type Target = T;
+    fn deref(&self) -> &T {
+        &self.0
+    }
+}
+---
+# Builder Pattern
+struct QueryBuilder {
+    table: String,
+    conditions: Vec<String>,
+    limit: Option<usize>,
+}
+
+impl QueryBuilder {
+    fn new(table: &str) -> Self {
+        Self {
+            table: table.to_string(),
+            conditions: Vec::new(),
+            limit: None,
+        }
+    }
+
+    fn where_clause(mut self, condition: &str) -> Self {
+        self.conditions.push(condition.to_string());
+        self
+    }
+
+    fn limit(mut self, n: usize) -> Self {
+        self.limit = Some(n);
+        self
+    }
+
+    fn build(&self) -> String {
+        let mut query = format!("SELECT * FROM {}", self.table);
+        if !self.conditions.is_empty() {
+            query.push_str(&format!(" WHERE {}", self.conditions.join(" AND ")));
+        }
+        if let Some(n) = self.limit {
+            query.push_str(&format!(" LIMIT {}", n));
+        }
+        query
+    }
+}
+---
+# Flatten Option of Option
+fn flatten_option<T>(opt: Option<Option<T>>) -> Option<T> {
+    opt.unwrap_or(None)
+}
+
+fn first_even_squared(nums: &[i32]) -> Option<i32> {
+    nums.iter()
+        .find(|&&x| x % 2 == 0)
+        .map(|&x| x * x)
+}
+---
+# Collect Results into Result of Vec
+fn parse_all(strings: &[&str]) -> Result<Vec<i32>, std::num::ParseIntError> {
+    strings.iter().map(|s| s.parse::<i32>()).collect()
+}
+
+fn filter_valid_numbers(strings: &[&str]) -> Vec<i32> {
+    strings.iter().filter_map(|s| s.parse::<i32>().ok()).collect()
+}
+---
+# Matrix Multiplication
+fn matrix_multiply(a: &Vec<Vec<f64>>, b: &Vec<Vec<f64>>) -> Vec<Vec<f64>> {
+    let rows = a.len();
+    let cols = b[0].len();
+    let inner = b.len();
+    let mut result = vec![vec![0.0; cols]; rows];
+    for i in 0..rows {
+        for j in 0..cols {
+            for k in 0..inner {
+                result[i][j] += a[i][k] * b[k][j];
+            }
+        }
+    }
+    result
+}
+---
+# Detect Cycle in Linked List (Floyd)
+fn has_cycle(head: &Option<Box<ListNode>>) -> bool {
+    let mut slow = head;
+    let mut fast = head;
+    loop {
+        slow = match slow {
+            Some(node) => &node.next,
+            None => return false,
+        };
+        fast = match fast {
+            Some(node) => match &node.next {
+                Some(next) => &next.next,
+                None => return false,
+            },
+            None => return false,
+        };
+        if std::ptr::eq(
+            slow.as_ref().map_or(std::ptr::null(), |n| &**n),
+            fast.as_ref().map_or(std::ptr::null(), |n| &**n),
+        ) {
+            return true;
+        }
+    }
+}
+---
+# Implement Add for Custom Type
+#[derive(Debug, Clone, Copy)]
+struct Vec2 {
+    x: f64,
+    y: f64,
+}
+
+impl std::ops::Add for Vec2 {
+    type Output = Self;
+    fn add(self, rhs: Self) -> Self {
+        Vec2 {
+            x: self.x + rhs.x,
+            y: self.y + rhs.y,
+        }
+    }
+}
+
+impl Vec2 {
+    fn magnitude(&self) -> f64 {
+        (self.x * self.x + self.y * self.y).sqrt()
+    }
+}
+---
+# Partition by Predicate
+fn partition_by<T, F: Fn(&T) -> bool>(items: Vec<T>, pred: F) -> (Vec<T>, Vec<T>) {
+    let mut yes = Vec::new();
+    let mut no = Vec::new();
+    for item in items {
+        if pred(&item) {
+            yes.push(item);
+        } else {
+            no.push(item);
+        }
+    }
+    (yes, no)
+}
+---
+# Interleave Two Iterators
+fn interleave<T>(a: Vec<T>, b: Vec<T>) -> Vec<T> {
+    let mut result = Vec::with_capacity(a.len() + b.len());
+    let mut a_iter = a.into_iter();
+    let mut b_iter = b.into_iter();
+    loop {
+        match (a_iter.next(), b_iter.next()) {
+            (Some(x), Some(y)) => {
+                result.push(x);
+                result.push(y);
+            }
+            (Some(x), None) => {
+                result.push(x);
+                result.extend(a_iter);
+                break;
+            }
+            (None, Some(y)) => {
+                result.push(y);
+                result.extend(b_iter);
+                break;
+            }
+            (None, None) => break,
+        }
+    }
+    result
+}
+---
+# Permutations Generator
+fn permutations<T: Clone>(arr: &[T]) -> Vec<Vec<T>> {
+    if arr.len() <= 1 {
+        return vec![arr.to_vec()];
+    }
+    let mut result = Vec::new();
+    for i in 0..arr.len() {
+        let mut rest = arr.to_vec();
+        let elem = rest.remove(i);
+        for mut perm in permutations(&rest) {
+            perm.insert(0, elem.clone());
+            result.push(perm);
+        }
+    }
+    result
+}
+---
+# Power Set (All Subsets)
+fn power_set<T: Clone>(set: &[T]) -> Vec<Vec<T>> {
+    let n = set.len();
+    let mut result = Vec::with_capacity(1 << n);
+    for mask in 0..(1 << n) {
+        let mut subset = Vec::new();
+        for i in 0..n {
+            if mask & (1 << i) != 0 {
+                subset.push(set[i].clone());
+            }
+        }
+        result.push(subset);
+    }
+    result
+}
+---
+# Detect Pangram
+fn is_pangram(s: &str) -> bool {
+    let chars: std::collections::HashSet<char> = s
+        .to_lowercase()
+        .chars()
+        .filter(|c| c.is_ascii_alphabetic())
+        .collect();
+    chars.len() == 26
+}
+---
+# Run-Length Decode
+fn rle_decode(encoded: &str) -> String {
+    let mut result = String::new();
+    let mut count = String::new();
+    for ch in encoded.chars() {
+        if ch.is_ascii_digit() {
+            count.push(ch);
+        } else {
+            let n: usize = count.parse().unwrap_or(1);
+            for _ in 0..n {
+                result.push(ch);
+            }
+            count.clear();
+        }
+    }
+    result
+}

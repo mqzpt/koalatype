@@ -25,6 +25,8 @@ PYTHON_SNIPPETS_FILE = SNIPPETS_DIR / "python_snippets.txt"
 JS_SNIPPETS_FILE = SNIPPETS_DIR / "javascript_snippets.txt"
 JAVA_SNIPPETS_FILE = SNIPPETS_DIR / "java_snippets.txt"
 GO_SNIPPETS_FILE = SNIPPETS_DIR / "go_snippets.txt"
+RUST_SNIPPETS_FILE = SNIPPETS_DIR / "rust_snippets.txt"
+TS_SNIPPETS_FILE = SNIPPETS_DIR / "typescript_snippets.txt"
 
 
 @dataclass(frozen=True)
@@ -193,6 +195,23 @@ def _build_word_packs() -> dict[str, WordPack]:
                 "System", "println", "toString", "equals", "hashCode",
             ),
         ),
+        "typescript": WordPack(
+            name="typescript",
+            description="TypeScript keywords and common identifiers",
+            words=(
+                "const", "let", "var", "function", "return", "if", "else",
+                "for", "while", "do", "switch", "case", "break", "continue",
+                "new", "this", "class", "extends", "super", "import", "export",
+                "default", "from", "async", "await", "try", "catch", "finally",
+                "throw", "typeof", "instanceof", "null", "undefined", "true",
+                "false", "interface", "type", "enum", "namespace", "readonly",
+                "private", "public", "protected", "static", "abstract",
+                "implements", "keyof", "infer", "never", "unknown", "any",
+                "void", "string", "number", "boolean", "Record", "Partial",
+                "Required", "Pick", "Omit", "Promise", "Array", "Map", "Set",
+                "as", "is", "in", "satisfies", "declare", "generic",
+            ),
+        ),
     }
     english_words = _load_english_words()
     packs["english-1000"] = WordPack(
@@ -243,6 +262,28 @@ def _build_word_packs() -> dict[str, WordPack]:
             description=f"Real Go code -- open-source snippets ({len(go_snippets)} snippets)",
             words=tuple(go_tokens),
             snippets=go_snippets,
+        )
+    rust_snippets = _load_snippets(RUST_SNIPPETS_FILE)
+    if rust_snippets:
+        rust_tokens: list[str] = []
+        for s in rust_snippets:
+            rust_tokens.extend(s.split())
+        packs["rust-code"] = WordPack(
+            name="rust-code",
+            description=f"Real Rust code -- open-source snippets ({len(rust_snippets)} snippets)",
+            words=tuple(rust_tokens),
+            snippets=rust_snippets,
+        )
+    ts_snippets = _load_snippets(TS_SNIPPETS_FILE)
+    if ts_snippets:
+        ts_tokens: list[str] = []
+        for s in ts_snippets:
+            ts_tokens.extend(s.split())
+        packs["typescript-code"] = WordPack(
+            name="typescript-code",
+            description=f"Real TypeScript code -- open-source snippets ({len(ts_snippets)} snippets)",
+            words=tuple(ts_tokens),
+            snippets=ts_snippets,
         )
     return packs
 
@@ -583,7 +624,7 @@ _MENU_WORDS_LANGS = [
     ("Rust", "rust", True),
     ("Go", "go", True),
     ("SQL", "sql", True),
-    ("TypeScript", "typescript", False),
+    ("TypeScript", "typescript", True),
     ("Java", "java", True),
     ("C++", "cpp", False),
 ]
@@ -591,9 +632,9 @@ _MENU_WORDS_LANGS = [
 _MENU_CODE_LANGS = [
     ("Python", "python-code", True),
     ("JavaScript", "javascript-code", True),
-    ("Rust", "rust-code", False),
+    ("Rust", "rust-code", True),
     ("Go", "go-code", True),
-    ("TypeScript", "typescript-code", False),
+    ("TypeScript", "typescript-code", True),
     ("Java", "java-code", True),
 ]
 

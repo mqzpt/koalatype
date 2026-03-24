@@ -1,0 +1,1440 @@
+# Bubble Sort — TheAlgorithms/TypeScript
+const bubbleSort = (arr: number[]): number[] => {
+  for (let i = 0; i < arr.length; i++) {
+    for (let j = 0; j < arr.length - 1; j++) {
+      if (arr[j] > arr[j + 1]) {
+        [arr[j], arr[j + 1]] = [arr[j + 1], arr[j]];
+      }
+    }
+  }
+  return arr;
+};
+---
+# Insertion Sort — TheAlgorithms/TypeScript
+const insertionSort = (arr: number[]): number[] => {
+  for (let i = 1; i < arr.length; i++) {
+    const temp = arr[i];
+    let j = i - 1;
+    while (j >= 0 && arr[j] > temp) {
+      arr[j + 1] = arr[j];
+      j--;
+    }
+    arr[j + 1] = temp;
+  }
+  return arr;
+};
+---
+# Selection Sort — TheAlgorithms/TypeScript
+const selectionSort = (arr: number[]): number[] => {
+  for (let i = 0; i < arr.length - 1; i++) {
+    let minIndex = i;
+    for (let j = i + 1; j < arr.length; j++) {
+      if (arr[j] < arr[minIndex]) {
+        minIndex = j;
+      }
+    }
+    [arr[i], arr[minIndex]] = [arr[minIndex], arr[i]];
+  }
+  return arr;
+};
+---
+# Merge Two Sorted Arrays — TheAlgorithms/TypeScript
+function merge(left: number[], right: number[]): number[] {
+  const result: number[] = [];
+  let i = 0;
+  let j = 0;
+  while (i < left.length && j < right.length) {
+    if (left[i] <= right[j]) {
+      result.push(left[i++]);
+    } else {
+      result.push(right[j++]);
+    }
+  }
+  return result.concat(left.slice(i), right.slice(j));
+}
+---
+# Merge Sort — TheAlgorithms/TypeScript
+function mergeSort(arr: number[]): number[] {
+  if (arr.length <= 1) return arr;
+  const mid = Math.floor(arr.length / 2);
+  const left = mergeSort(arr.slice(0, mid));
+  const right = mergeSort(arr.slice(mid));
+  const result: number[] = [];
+  let i = 0, j = 0;
+  while (i < left.length && j < right.length) {
+    result.push(left[i] <= right[j] ? left[i++] : right[j++]);
+  }
+  return result.concat(left.slice(i), right.slice(j));
+}
+---
+# Quick Sort Partition — TheAlgorithms/TypeScript
+function partition(arr: number[], lo: number, hi: number): number {
+  const pivot = arr[hi];
+  let i = lo - 1;
+  for (let j = lo; j < hi; j++) {
+    if (arr[j] <= pivot) {
+      i++;
+      [arr[i], arr[j]] = [arr[j], arr[i]];
+    }
+  }
+  [arr[i + 1], arr[hi]] = [arr[hi], arr[i + 1]];
+  return i + 1;
+}
+---
+# Quick Sort — TheAlgorithms/TypeScript
+function quickSort(arr: number[], lo: number = 0, hi: number = arr.length - 1): number[] {
+  if (lo < hi) {
+    const pivot = arr[hi];
+    let idx = lo;
+    for (let j = lo; j < hi; j++) {
+      if (arr[j] <= pivot) {
+        [arr[idx], arr[j]] = [arr[j], arr[idx]];
+        idx++;
+      }
+    }
+    [arr[idx], arr[hi]] = [arr[hi], arr[idx]];
+    quickSort(arr, lo, idx - 1);
+    quickSort(arr, idx + 1, hi);
+  }
+  return arr;
+}
+---
+# Heap Sort Heapify — TheAlgorithms/TypeScript
+function heapify(arr: number[], n: number, i: number): void {
+  let largest = i;
+  const left = 2 * i + 1;
+  const right = 2 * i + 2;
+  if (left < n && arr[left] > arr[largest]) largest = left;
+  if (right < n && arr[right] > arr[largest]) largest = right;
+  if (largest !== i) {
+    [arr[i], arr[largest]] = [arr[largest], arr[i]];
+    heapify(arr, n, largest);
+  }
+}
+---
+# Shell Sort — TheAlgorithms/TypeScript
+function shellSort<T>(arr: T[]): T[] {
+  let gap = Math.floor(arr.length / 2);
+  while (gap > 0) {
+    for (let i = gap; i < arr.length; i++) {
+      const temp = arr[i];
+      let j = i;
+      while (j >= gap && arr[j - gap] > temp) {
+        arr[j] = arr[j - gap];
+        j -= gap;
+      }
+      arr[j] = temp;
+    }
+    gap = Math.floor(gap / 2);
+  }
+  return arr;
+}
+---
+# Counting Sort — TheAlgorithms/TypeScript
+const countingSort = (arr: number[], min: number, max: number): number[] => {
+  const count = new Array(max - min + 1).fill(0);
+  const sorted: number[] = [];
+  for (const el of arr) count[el - min]++;
+  count[0] -= 1;
+  for (let i = 1; i < count.length; i++) count[i] += count[i - 1];
+  for (let i = arr.length - 1; i >= 0; i--) {
+    sorted[count[arr[i] - min]] = arr[i];
+    count[arr[i] - min]--;
+  }
+  return sorted;
+};
+---
+# Gnome Sort — TheAlgorithms/TypeScript
+const gnomeSort = (arr: number[]): number[] => {
+  if (arr.length <= 1) return arr;
+  let i: number = 1;
+  while (i < arr.length) {
+    if (arr[i - 1] <= arr[i]) {
+      i++;
+    } else {
+      [arr[i], arr[i - 1]] = [arr[i - 1], arr[i]];
+      i = Math.max(1, i - 1);
+    }
+  }
+  return arr;
+};
+---
+# Binary Search Iterative — TheAlgorithms/TypeScript
+function binarySearch(arr: number[], target: number): number | null {
+  let start = 0;
+  let end = arr.length - 1;
+  while (start <= end) {
+    const mid = (start + end) >> 1;
+    if (arr[mid] === target) return mid;
+    if (arr[mid] < target) {
+      start = mid + 1;
+    } else {
+      end = mid - 1;
+    }
+  }
+  return null;
+}
+---
+# Binary Search Recursive — TheAlgorithms/TypeScript
+function binarySearchRecursive(
+  arr: number[], target: number, start: number, end: number
+): number | null {
+  if (start > end) return null;
+  const mid = (start + end) >> 1;
+  if (arr[mid] === target) return mid;
+  if (arr[mid] < target) {
+    return binarySearchRecursive(arr, target, mid + 1, end);
+  }
+  return binarySearchRecursive(arr, target, start, mid - 1);
+}
+---
+# Linear Search — TheAlgorithms/TypeScript
+function linearSearch<T>(arr: T[], target: T): number {
+  for (let i = 0; i < arr.length; i++) {
+    if (arr[i] === target) return i;
+  }
+  return -1;
+}
+---
+# Jump Search — TheAlgorithms/TypeScript
+function jumpSearch(arr: number[], target: number): number {
+  const n = arr.length;
+  if (n === 0) return -1;
+  const step = Math.floor(Math.sqrt(n));
+  let prev = 0;
+  let curr = step;
+  while (curr < n && arr[curr] < target) {
+    prev = curr;
+    curr += step;
+  }
+  for (let i = prev; i < Math.min(curr + 1, n); i++) {
+    if (arr[i] === target) return i;
+  }
+  return -1;
+}
+---
+# Interpolation Search — TheAlgorithms/TypeScript
+function interpolationSearch(arr: number[], target: number): number {
+  let lo = 0;
+  let hi = arr.length - 1;
+  while (lo <= hi && target >= arr[lo] && target <= arr[hi]) {
+    const pos = lo + Math.floor(
+      ((target - arr[lo]) * (hi - lo)) / (arr[hi] - arr[lo])
+    );
+    if (arr[pos] === target) return pos;
+    if (arr[pos] < target) lo = pos + 1;
+    else hi = pos - 1;
+  }
+  return -1;
+}
+---
+# Fibonacci Iterative — TheAlgorithms/TypeScript
+function fibonacci(n: number): number {
+  if (n <= 0) return 0;
+  let prev = 0;
+  let curr = 1;
+  for (let i = 2; i <= n; i++) {
+    const next = prev + curr;
+    prev = curr;
+    curr = next;
+  }
+  return curr;
+}
+---
+# Fibonacci Recursive — TheAlgorithms/TypeScript
+function fibonacciRecursive(n: number): number {
+  if (n < 0 || !Number.isInteger(n)) {
+    throw new Error("only non-negative integers are supported");
+  }
+  if (n <= 1) return n;
+  return fibonacciRecursive(n - 1) + fibonacciRecursive(n - 2);
+}
+---
+# Factorial — TheAlgorithms/TypeScript
+function factorial(n: number): number {
+  if (n < 0 || !Number.isInteger(n)) {
+    throw new Error("only natural numbers are supported");
+  }
+  if (n === 0) return 1;
+  return n * factorial(n - 1);
+}
+---
+# Greatest Common Factor — TheAlgorithms/TypeScript
+function gcd(a: number, b: number): number {
+  if (a < 0 || b < 0) {
+    throw new Error("only non-negative integers are supported");
+  }
+  while (b !== 0) {
+    [a, b] = [b, a % b];
+  }
+  return a;
+}
+---
+# Sieve of Eratosthenes — TheAlgorithms/TypeScript
+function sieveOfEratosthenes(n: number): number[] {
+  const isPrime = new Array<boolean>(n + 1).fill(true);
+  const primes: number[] = [];
+  for (let i = 2; i <= n; i++) {
+    if (isPrime[i]) {
+      primes.push(i);
+      for (let j = i + i; j <= n; j += i) {
+        isPrime[j] = false;
+      }
+    }
+  }
+  return primes;
+}
+---
+# Is Prime — TheAlgorithms/TypeScript
+function isPrime(n: number): boolean {
+  if (n < 2 || !Number.isInteger(n)) return false;
+  if (n <= 3) return true;
+  if (n % 2 === 0 || n % 3 === 0) return false;
+  for (let i = 5; i * i <= n; i += 6) {
+    if (n % i === 0 || n % (i + 2) === 0) return false;
+  }
+  return true;
+}
+---
+# Palindrome Number — TheAlgorithms/TypeScript
+function isPalindrome(n: number): boolean {
+  if (n < 0) return false;
+  if (n % 10 === 0 && n !== 0) return false;
+  let reversed = 0;
+  let num = n;
+  while (num > reversed) {
+    reversed = reversed * 10 + (num % 10);
+    num = Math.floor(num / 10);
+  }
+  return num === reversed || num === Math.floor(reversed / 10);
+}
+---
+# Hamming Distance — TheAlgorithms/TypeScript
+function hammingDistance(a: string, b: string): number {
+  if (a.length !== b.length) {
+    throw new Error("Strings must be of the same length");
+  }
+  let distance = 0;
+  for (let i = 0; i < a.length; i++) {
+    if (a[i] !== b[i]) distance++;
+  }
+  return distance;
+}
+---
+# Pascal's Triangle Row — TheAlgorithms/TypeScript
+function pascalsTriangle(n: number): number[] {
+  const row: number[] = [1];
+  for (let i = 1; i < n; i++) {
+    row[i] = (row[i - 1] * (n - i)) / i;
+  }
+  return row;
+}
+---
+# Calculate Mean — TheAlgorithms/TypeScript
+const calculateMean = (numbers: number[]): number => {
+  if (numbers.length < 1) {
+    throw new TypeError("Invalid Input");
+  }
+  const sum = numbers.reduce((acc, curr) => acc + curr, 0);
+  return sum / numbers.length;
+};
+---
+# Calculate Median — TheAlgorithms/TypeScript
+const calculateMedian = (numbers: number[]): number => {
+  if (numbers.length < 1) {
+    throw new TypeError("Input array must contain at least one number.");
+  }
+  const total = numbers.length;
+  if (total % 2 === 0) {
+    const idx = total / 2;
+    return (numbers[idx - 1] + numbers[idx]) / 2;
+  }
+  return numbers[Math.floor(total / 2)];
+};
+---
+# Euler's Totient — TheAlgorithms/TypeScript
+const phi = (n: number): number => {
+  let result: number = n;
+  for (let i = 2; i * i <= n; i++) {
+    if (n % i === 0) {
+      while (n % i === 0) n = n / i;
+      result -= Math.floor(result / i);
+    }
+  }
+  if (n > 1) result -= Math.floor(result / n);
+  return result;
+};
+---
+# Digit Sum — TheAlgorithms/TypeScript
+const digitSum = (num: number): number => {
+  if (num < 0 || !Number.isInteger(num)) {
+    throw new Error("only natural numbers are supported");
+  }
+  let sum = 0;
+  while (num !== 0) {
+    sum += num % 10;
+    num = Math.floor(num / 10);
+  }
+  return sum;
+};
+---
+# Prime Factorization — TheAlgorithms/TypeScript
+const factorize = (n: number): Map<number, number> => {
+  const result: Map<number, number> = new Map();
+  for (let i = 2; i * i <= n; i++) {
+    while (n % i === 0) {
+      const count = result.get(i) ?? 0;
+      result.set(i, count + 1);
+      n = n / i;
+    }
+  }
+  if (n > 1) {
+    const count = result.get(n) ?? 0;
+    result.set(n, count + 1);
+  }
+  return result;
+};
+---
+# Find Factors — TheAlgorithms/TypeScript
+const findFactors = (num: number): Set<number> => {
+  if (num <= 0 || !Number.isInteger(num)) {
+    throw new Error("Only natural numbers are supported.");
+  }
+  const res: Set<number> = new Set();
+  for (let i = 1; i * i <= num; i++) {
+    if (num % i === 0) {
+      res.add(i);
+      res.add(Math.floor(num / i));
+    }
+  }
+  return res;
+};
+---
+# Coin Change DP — TheAlgorithms/TypeScript
+function coinChange(amount: number, coins: number[]): number {
+  const dp: number[] = new Array(amount + 1).fill(Infinity);
+  dp[0] = 0;
+  for (const coin of coins) {
+    for (let i = coin; i <= amount; i++) {
+      dp[i] = Math.min(dp[i], dp[i - coin] + 1);
+    }
+  }
+  return dp[amount] === Infinity ? -1 : dp[amount];
+}
+---
+# 0/1 Knapsack — TheAlgorithms/TypeScript
+function knapsack(capacity: number, weights: number[], values: number[]): number {
+  const n = weights.length;
+  const dp: number[][] = Array.from({ length: n + 1 }, () =>
+    new Array(capacity + 1).fill(0)
+  );
+  for (let i = 1; i <= n; i++) {
+    for (let w = 0; w <= capacity; w++) {
+      if (weights[i - 1] <= w) {
+        dp[i][w] = Math.max(dp[i - 1][w], dp[i - 1][w - weights[i - 1]] + values[i - 1]);
+      } else {
+        dp[i][w] = dp[i - 1][w];
+      }
+    }
+  }
+  return dp[n][capacity];
+}
+---
+# Longest Common Subsequence — TheAlgorithms/TypeScript
+function lcs(a: string, b: string): string {
+  const dp: number[][] = Array.from({ length: a.length + 1 }, () =>
+    new Array(b.length + 1).fill(0)
+  );
+  for (let i = 1; i <= a.length; i++) {
+    for (let j = 1; j <= b.length; j++) {
+      dp[i][j] = a[i - 1] === b[j - 1]
+        ? dp[i - 1][j - 1] + 1
+        : Math.max(dp[i - 1][j], dp[i][j - 1]);
+    }
+  }
+  let result = "";
+  let i = a.length, j = b.length;
+  while (i > 0 && j > 0) {
+    if (a[i - 1] === b[j - 1]) { result = a[i - 1] + result; i--; j--; }
+    else if (dp[i - 1][j] > dp[i][j - 1]) i--;
+    else j--;
+  }
+  return result;
+}
+---
+# Generic Stack — TheAlgorithms/TypeScript
+class Stack<T> {
+  private items: T[] = [];
+  private readonly limit: number;
+  constructor(limit: number = Number.MAX_VALUE) { this.limit = limit; }
+  push(value: T): void {
+    if (this.items.length >= this.limit) throw new Error("Stack Overflow");
+    this.items.push(value);
+  }
+  pop(): T {
+    if (this.items.length === 0) throw new Error("Stack Underflow");
+    return this.items.pop()!;
+  }
+  peek(): T | null { return this.items.length ? this.items[this.items.length - 1] : null; }
+  isEmpty(): boolean { return this.items.length === 0; }
+  get length(): number { return this.items.length; }
+}
+---
+# Queue Interface — TheAlgorithms/TypeScript
+interface Queue<T> {
+  enqueue(item: T): void;
+  dequeue(): T | undefined;
+  peek(): T | undefined | null;
+  isEmpty(): boolean;
+  length(): number;
+}
+---
+# Disjoint Set Find — TheAlgorithms/TypeScript
+class DisjointSet {
+  private parent: number[];
+  private size: number[];
+  constructor(n: number) {
+    this.parent = Array.from({ length: n }, (_, i) => i);
+    this.size = new Array(n).fill(1);
+  }
+  find(x: number): number {
+    if (this.parent[x] !== x) {
+      this.parent[x] = this.find(this.parent[x]);
+    }
+    return this.parent[x];
+  }
+  union(a: number, b: number): void {
+    let rootA = this.find(a);
+    let rootB = this.find(b);
+    if (rootA === rootB) return;
+    if (this.size[rootA] < this.size[rootB]) [rootA, rootB] = [rootB, rootA];
+    this.parent[rootB] = rootA;
+    this.size[rootA] += this.size[rootB];
+  }
+}
+---
+# Generic Linked List Node — TypeScript patterns
+class ListNode<T> {
+  value: T;
+  next: ListNode<T> | null;
+  constructor(value: T, next: ListNode<T> | null = null) {
+    this.value = value;
+    this.next = next;
+  }
+}
+
+function toArray<T>(head: ListNode<T> | null): T[] {
+  const result: T[] = [];
+  let current = head;
+  while (current !== null) {
+    result.push(current.value);
+    current = current.next;
+  }
+  return result;
+}
+---
+# Reverse Linked List — TypeScript patterns
+function reverseList<T>(head: ListNode<T> | null): ListNode<T> | null {
+  let prev: ListNode<T> | null = null;
+  let current = head;
+  while (current !== null) {
+    const next = current.next;
+    current.next = prev;
+    prev = current;
+    current = next;
+  }
+  return prev;
+}
+---
+# Binary Tree Node — TypeScript patterns
+class TreeNode<T> {
+  value: T;
+  left: TreeNode<T> | null;
+  right: TreeNode<T> | null;
+  constructor(value: T, left: TreeNode<T> | null = null, right: TreeNode<T> | null = null) {
+    this.value = value;
+    this.left = left;
+    this.right = right;
+  }
+}
+
+function inorder<T>(node: TreeNode<T> | null, result: T[] = []): T[] {
+  if (node === null) return result;
+  inorder(node.left, result);
+  result.push(node.value);
+  inorder(node.right, result);
+  return result;
+}
+---
+# BST Insert — TypeScript patterns
+function bstInsert<T>(root: TreeNode<T> | null, value: T): TreeNode<T> {
+  if (root === null) return new TreeNode(value);
+  if (value < root.value) {
+    root.left = bstInsert(root.left, value);
+  } else {
+    root.right = bstInsert(root.right, value);
+  }
+  return root;
+}
+---
+# BST Search — TypeScript patterns
+function bstSearch<T>(root: TreeNode<T> | null, target: T): TreeNode<T> | null {
+  if (root === null || root.value === target) return root;
+  if (target < root.value) return bstSearch(root.left, target);
+  return bstSearch(root.right, target);
+}
+---
+# Max Depth of Binary Tree — TypeScript patterns
+function maxDepth<T>(root: TreeNode<T> | null): number {
+  if (root === null) return 0;
+  const leftDepth = maxDepth(root.left);
+  const rightDepth = maxDepth(root.right);
+  return Math.max(leftDepth, rightDepth) + 1;
+}
+---
+# Type Guard: isString — TypeScript patterns
+function isString(value: unknown): value is string {
+  return typeof value === "string";
+}
+
+function greet(input: string | number): string {
+  if (isString(input)) {
+    return `Hello, ${input.toUpperCase()}!`;
+  }
+  return `Hello, user #${input}!`;
+}
+---
+# Type Guard: isNonNullable — TypeScript patterns
+function isNonNullable<T>(value: T): value is NonNullable<T> {
+  return value !== null && value !== undefined;
+}
+
+function filterNullish<T>(arr: (T | null | undefined)[]): T[] {
+  return arr.filter(isNonNullable);
+}
+---
+# Type Guard: hasProperty — TypeScript patterns
+function hasProperty<K extends string>(
+  obj: unknown,
+  key: K
+): obj is Record<K, unknown> {
+  return typeof obj === "object" && obj !== null && key in obj;
+}
+---
+# Type Guard: isArrayOf — TypeScript patterns
+function isArrayOf<T>(
+  arr: unknown,
+  check: (item: unknown) => item is T
+): arr is T[] {
+  return Array.isArray(arr) && arr.every(check);
+}
+
+function isNumber(value: unknown): value is number {
+  return typeof value === "number" && !Number.isNaN(value);
+}
+---
+# Discriminated Union — TypeScript patterns
+interface Circle { kind: "circle"; radius: number; }
+interface Rectangle { kind: "rectangle"; width: number; height: number; }
+type Shape = Circle | Rectangle;
+
+function area(shape: Shape): number {
+  switch (shape.kind) {
+    case "circle": return Math.PI * shape.radius ** 2;
+    case "rectangle": return shape.width * shape.height;
+  }
+}
+---
+# Exhaustive Check with never — TypeScript patterns
+interface Triangle { kind: "triangle"; base: number; height: number; }
+type ShapeUnion = Circle | Rectangle | Triangle;
+
+function assertNever(x: never): never {
+  throw new Error(`Unexpected value: ${x}`);
+}
+
+function getArea(shape: ShapeUnion): number {
+  switch (shape.kind) {
+    case "circle": return Math.PI * shape.radius ** 2;
+    case "rectangle": return shape.width * shape.height;
+    case "triangle": return (shape.base * shape.height) / 2;
+    default: return assertNever(shape);
+  }
+}
+---
+# Generic Comparable Interface — TypeScript patterns
+interface Comparable<T> {
+  compareTo(other: T): number;
+}
+
+class Temperature implements Comparable<Temperature> {
+  constructor(public readonly degrees: number) {}
+  compareTo(other: Temperature): number {
+    return this.degrees - other.degrees;
+  }
+}
+---
+# Generic Repository Pattern — TypeScript patterns
+interface Repository<T extends { id: string }> {
+  findById(id: string): T | undefined;
+  findAll(): T[];
+  save(entity: T): void;
+  delete(id: string): boolean;
+}
+---
+# Readonly Deep — TypeScript utility types
+type DeepReadonly<T> = {
+  readonly [K in keyof T]: T[K] extends object
+    ? DeepReadonly<T[K]>
+    : T[K];
+};
+
+interface Config {
+  host: string;
+  port: number;
+  db: { name: string; pool: number };
+}
+
+type ImmutableConfig = DeepReadonly<Config>;
+---
+# Partial Update Pattern — TypeScript utility types
+interface User {
+  id: string;
+  name: string;
+  email: string;
+  age: number;
+}
+
+function updateUser(user: User, updates: Partial<Omit<User, "id">>): User {
+  return { ...user, ...updates };
+}
+---
+# Pick and Required — TypeScript utility types
+interface FormData {
+  username?: string;
+  email?: string;
+  bio?: string;
+  avatar?: string;
+}
+
+type LoginForm = Required<Pick<FormData, "username" | "email">>;
+
+function validateLogin(form: LoginForm): boolean {
+  return form.username.length > 0 && form.email.includes("@");
+}
+---
+# Record Type Map — TypeScript utility types
+type HttpMethod = "GET" | "POST" | "PUT" | "DELETE";
+type RouteHandler = (path: string) => void;
+
+const handlers: Record<HttpMethod, RouteHandler> = {
+  GET: (path) => console.log(`GET ${path}`),
+  POST: (path) => console.log(`POST ${path}`),
+  PUT: (path) => console.log(`PUT ${path}`),
+  DELETE: (path) => console.log(`DELETE ${path}`),
+};
+---
+# Extract and Exclude — TypeScript utility types
+type Event = "click" | "scroll" | "mousemove" | "keydown" | "keyup";
+type MouseEvent = Extract<Event, "click" | "scroll" | "mousemove">;
+type KeyEvent = Exclude<Event, MouseEvent>;
+
+function handleKey(event: KeyEvent): void {
+  console.log(`Key event: ${event}`);
+}
+---
+# Mapped Type with Getters — TypeScript utility types
+type Getters<T> = {
+  [K in keyof T as `get${Capitalize<string & K>}`]: () => T[K];
+};
+
+interface Person {
+  name: string;
+  age: number;
+}
+
+type PersonGetters = Getters<Person>;
+---
+# Conditional Type — TypeScript utility types
+type IsArray<T> = T extends readonly unknown[] ? true : false;
+type Flatten<T> = T extends readonly (infer U)[] ? U : T;
+
+type A = Flatten<string[]>;
+type B = Flatten<number>;
+type C = IsArray<boolean[]>;
+---
+# Generic Enum Pattern — TypeScript patterns
+enum Direction {
+  Up = "UP",
+  Down = "DOWN",
+  Left = "LEFT",
+  Right = "RIGHT",
+}
+
+function move(direction: Direction): { x: number; y: number } {
+  const deltas: Record<Direction, { x: number; y: number }> = {
+    [Direction.Up]: { x: 0, y: -1 },
+    [Direction.Down]: { x: 0, y: 1 },
+    [Direction.Left]: { x: -1, y: 0 },
+    [Direction.Right]: { x: 1, y: 0 },
+  };
+  return deltas[direction];
+}
+---
+# Result Type Pattern — TypeScript patterns
+type Result<T, E = Error> =
+  | { ok: true; value: T }
+  | { ok: false; error: E };
+
+function safeDivide(a: number, b: number): Result<number, string> {
+  if (b === 0) return { ok: false, error: "Division by zero" };
+  return { ok: true, value: a / b };
+}
+---
+# Option Type Pattern — TypeScript patterns
+type Option<T> = { some: true; value: T } | { some: false };
+
+function fromNullable<T>(value: T | null | undefined): Option<T> {
+  if (value === null || value === undefined) return { some: false };
+  return { some: true, value };
+}
+
+function unwrapOr<T>(option: Option<T>, fallback: T): T {
+  return option.some ? option.value : fallback;
+}
+---
+# Generic Memoize — TypeScript patterns
+function memoize<T extends (...args: unknown[]) => unknown>(fn: T): T {
+  const cache = new Map<string, ReturnType<T>>();
+  return ((...args: Parameters<T>): ReturnType<T> => {
+    const key = JSON.stringify(args);
+    if (cache.has(key)) return cache.get(key)!;
+    const result = fn(...args) as ReturnType<T>;
+    cache.set(key, result);
+    return result;
+  }) as T;
+}
+---
+# Generic Pipe Function — TypeScript patterns
+function pipe<A, B>(fn1: (a: A) => B): (a: A) => B;
+function pipe<A, B, C>(fn1: (a: A) => B, fn2: (b: B) => C): (a: A) => C;
+function pipe<A, B, C, D>(
+  fn1: (a: A) => B, fn2: (b: B) => C, fn3: (c: C) => D
+): (a: A) => D;
+function pipe(...fns: Function[]): Function {
+  return (x: unknown) => fns.reduce((acc, fn) => fn(acc), x);
+}
+---
+# Generic Retry with Backoff — TypeScript patterns
+async function retry<T>(
+  fn: () => Promise<T>,
+  maxAttempts: number,
+  delayMs: number = 1000
+): Promise<T> {
+  for (let attempt = 1; attempt <= maxAttempts; attempt++) {
+    try {
+      return await fn();
+    } catch (error) {
+      if (attempt === maxAttempts) throw error;
+      await new Promise((r) => setTimeout(r, delayMs * attempt));
+    }
+  }
+  throw new Error("Unreachable");
+}
+---
+# Event Emitter — TypeScript patterns
+type EventMap = Record<string, unknown[]>;
+
+class TypedEmitter<T extends EventMap> {
+  private listeners: { [K in keyof T]?: Array<(...args: T[K]) => void> } = {};
+
+  on<K extends keyof T>(event: K, fn: (...args: T[K]) => void): void {
+    (this.listeners[event] ??= []).push(fn);
+  }
+
+  emit<K extends keyof T>(event: K, ...args: T[K]): void {
+    this.listeners[event]?.forEach((fn) => fn(...args));
+  }
+}
+---
+# Builder Pattern — TypeScript patterns
+class QueryBuilder {
+  private table: string = "";
+  private conditions: string[] = [];
+  private limit: number | null = null;
+
+  from(table: string): this { this.table = table; return this; }
+  where(condition: string): this { this.conditions.push(condition); return this; }
+  take(n: number): this { this.limit = n; return this; }
+
+  build(): string {
+    let query = `SELECT * FROM ${this.table}`;
+    if (this.conditions.length) query += ` WHERE ${this.conditions.join(" AND ")}`;
+    if (this.limit !== null) query += ` LIMIT ${this.limit}`;
+    return query;
+  }
+}
+---
+# Singleton Pattern — TypeScript patterns
+class Singleton {
+  private static instance: Singleton | null = null;
+  private constructor(public readonly id: number) {}
+
+  static getInstance(): Singleton {
+    if (Singleton.instance === null) {
+      Singleton.instance = new Singleton(Math.random());
+    }
+    return Singleton.instance;
+  }
+}
+---
+# Observer Pattern — TypeScript patterns
+interface Observer<T> {
+  update(value: T): void;
+}
+
+class Subject<T> {
+  private observers: Set<Observer<T>> = new Set();
+  subscribe(observer: Observer<T>): void { this.observers.add(observer); }
+  unsubscribe(observer: Observer<T>): void { this.observers.delete(observer); }
+  notify(value: T): void {
+    this.observers.forEach((obs) => obs.update(value));
+  }
+}
+---
+# Generic LRU Cache — TypeScript patterns
+class LRUCache<K, V> {
+  private cache = new Map<K, V>();
+  constructor(private readonly capacity: number) {}
+
+  get(key: K): V | undefined {
+    if (!this.cache.has(key)) return undefined;
+    const value = this.cache.get(key)!;
+    this.cache.delete(key);
+    this.cache.set(key, value);
+    return value;
+  }
+
+  put(key: K, value: V): void {
+    if (this.cache.has(key)) this.cache.delete(key);
+    else if (this.cache.size >= this.capacity) {
+      const oldest = this.cache.keys().next().value!;
+      this.cache.delete(oldest);
+    }
+    this.cache.set(key, value);
+  }
+}
+---
+# Matrix Transpose — TypeScript patterns
+function transpose<T>(matrix: T[][]): T[][] {
+  if (matrix.length === 0) return [];
+  const rows = matrix.length;
+  const cols = matrix[0].length;
+  const result: T[][] = Array.from({ length: cols }, () => []);
+  for (let i = 0; i < rows; i++) {
+    for (let j = 0; j < cols; j++) {
+      result[j][i] = matrix[i][j];
+    }
+  }
+  return result;
+}
+---
+# Flatten Nested Array — TypeScript patterns
+function flatten<T>(arr: (T | T[])[]): T[] {
+  const result: T[] = [];
+  for (const item of arr) {
+    if (Array.isArray(item)) {
+      result.push(...item);
+    } else {
+      result.push(item);
+    }
+  }
+  return result;
+}
+---
+# Deep Clone — TypeScript patterns
+function deepClone<T>(obj: T): T {
+  if (obj === null || typeof obj !== "object") return obj;
+  if (Array.isArray(obj)) return obj.map(deepClone) as T;
+  const clone: Record<string, unknown> = {};
+  for (const key of Object.keys(obj as Record<string, unknown>)) {
+    clone[key] = deepClone((obj as Record<string, unknown>)[key]);
+  }
+  return clone as T;
+}
+---
+# Group By — TypeScript patterns
+function groupBy<T, K extends string | number>(
+  arr: T[],
+  keyFn: (item: T) => K
+): Record<K, T[]> {
+  const result = {} as Record<K, T[]>;
+  for (const item of arr) {
+    const key = keyFn(item);
+    (result[key] ??= []).push(item);
+  }
+  return result;
+}
+---
+# Chunk Array — TypeScript patterns
+function chunk<T>(arr: readonly T[], size: number): T[][] {
+  if (size <= 0) throw new Error("Size must be positive");
+  const chunks: T[][] = [];
+  for (let i = 0; i < arr.length; i += size) {
+    chunks.push(arr.slice(i, i + size));
+  }
+  return chunks;
+}
+---
+# Zip Arrays — TypeScript patterns
+function zip<A, B>(a: readonly A[], b: readonly B[]): [A, B][] {
+  const length = Math.min(a.length, b.length);
+  const result: [A, B][] = [];
+  for (let i = 0; i < length; i++) {
+    result.push([a[i], b[i]]);
+  }
+  return result;
+}
+---
+# Unique Array — TypeScript patterns
+function unique<T>(arr: readonly T[]): T[] {
+  return [...new Set(arr)];
+}
+
+function uniqueBy<T, K>(arr: readonly T[], keyFn: (item: T) => K): T[] {
+  const seen = new Set<K>();
+  return arr.filter((item) => {
+    const key = keyFn(item);
+    if (seen.has(key)) return false;
+    seen.add(key);
+    return true;
+  });
+}
+---
+# Debounce — TypeScript patterns
+function debounce<T extends (...args: unknown[]) => void>(
+  fn: T,
+  delayMs: number
+): (...args: Parameters<T>) => void {
+  let timeoutId: ReturnType<typeof setTimeout> | null = null;
+  return (...args: Parameters<T>): void => {
+    if (timeoutId !== null) clearTimeout(timeoutId);
+    timeoutId = setTimeout(() => fn(...args), delayMs);
+  };
+}
+---
+# Throttle — TypeScript patterns
+function throttle<T extends (...args: unknown[]) => void>(
+  fn: T,
+  limitMs: number
+): (...args: Parameters<T>) => void {
+  let lastCall = 0;
+  return (...args: Parameters<T>): void => {
+    const now = Date.now();
+    if (now - lastCall >= limitMs) {
+      lastCall = now;
+      fn(...args);
+    }
+  };
+}
+---
+# Two Sum — TypeScript patterns
+function twoSum(nums: number[], target: number): [number, number] | null {
+  const seen = new Map<number, number>();
+  for (let i = 0; i < nums.length; i++) {
+    const complement = target - nums[i];
+    const j = seen.get(complement);
+    if (j !== undefined) return [j, i];
+    seen.set(nums[i], i);
+  }
+  return null;
+}
+---
+# Valid Parentheses — TypeScript patterns
+function isValidParens(s: string): boolean {
+  const stack: string[] = [];
+  const pairs: Record<string, string> = { ")": "(", "]": "[", "}": "{" };
+  for (const ch of s) {
+    if ("([{".includes(ch)) {
+      stack.push(ch);
+    } else if (ch in pairs) {
+      if (stack.pop() !== pairs[ch]) return false;
+    }
+  }
+  return stack.length === 0;
+}
+---
+# Maximum Subarray (Kadane's) — TypeScript patterns
+function maxSubarraySum(nums: number[]): number {
+  if (nums.length === 0) throw new Error("Array must not be empty");
+  let maxSum = nums[0];
+  let currentSum = nums[0];
+  for (let i = 1; i < nums.length; i++) {
+    currentSum = Math.max(nums[i], currentSum + nums[i]);
+    maxSum = Math.max(maxSum, currentSum);
+  }
+  return maxSum;
+}
+---
+# Climbing Stairs DP — TypeScript patterns
+function climbStairs(n: number): number {
+  if (n <= 2) return n;
+  let prev = 1;
+  let curr = 2;
+  for (let i = 3; i <= n; i++) {
+    const next = prev + curr;
+    prev = curr;
+    curr = next;
+  }
+  return curr;
+}
+---
+# String Permutations — TypeScript patterns
+function permutations(str: string): string[] {
+  if (str.length <= 1) return [str];
+  const result: string[] = [];
+  for (let i = 0; i < str.length; i++) {
+    const char = str[i];
+    const remaining = str.slice(0, i) + str.slice(i + 1);
+    for (const perm of permutations(remaining)) {
+      result.push(char + perm);
+    }
+  }
+  return result;
+}
+---
+# Power Set — TypeScript patterns
+function powerSet<T>(items: T[]): T[][] {
+  const result: T[][] = [[]];
+  for (const item of items) {
+    const len = result.length;
+    for (let i = 0; i < len; i++) {
+      result.push([...result[i], item]);
+    }
+  }
+  return result;
+}
+---
+# Generic Min/Max Heap — TypeScript patterns
+class MinHeap<T> {
+  private heap: T[] = [];
+  constructor(private compare: (a: T, b: T) => number) {}
+  private swap(i: number, j: number): void {
+    [this.heap[i], this.heap[j]] = [this.heap[j], this.heap[i]];
+  }
+  push(val: T): void {
+    this.heap.push(val);
+    let i = this.heap.length - 1;
+    while (i > 0) {
+      const parent = (i - 1) >> 1;
+      if (this.compare(this.heap[i], this.heap[parent]) >= 0) break;
+      this.swap(i, parent);
+      i = parent;
+    }
+  }
+  get size(): number { return this.heap.length; }
+}
+---
+# Graph Adjacency List — TypeScript patterns
+class Graph<T> {
+  private adjacencyList: Map<T, Set<T>> = new Map();
+
+  addVertex(vertex: T): void {
+    if (!this.adjacencyList.has(vertex)) {
+      this.adjacencyList.set(vertex, new Set());
+    }
+  }
+
+  addEdge(from: T, to: T): void {
+    this.addVertex(from);
+    this.addVertex(to);
+    this.adjacencyList.get(from)!.add(to);
+    this.adjacencyList.get(to)!.add(from);
+  }
+
+  neighbors(vertex: T): T[] {
+    return [...(this.adjacencyList.get(vertex) ?? [])];
+  }
+}
+---
+# BFS — TypeScript patterns
+function bfs<T>(graph: Map<T, T[]>, start: T): T[] {
+  const visited = new Set<T>([start]);
+  const queue: T[] = [start];
+  const order: T[] = [];
+  while (queue.length > 0) {
+    const node = queue.shift()!;
+    order.push(node);
+    for (const neighbor of graph.get(node) ?? []) {
+      if (!visited.has(neighbor)) {
+        visited.add(neighbor);
+        queue.push(neighbor);
+      }
+    }
+  }
+  return order;
+}
+---
+# DFS — TypeScript patterns
+function dfs<T>(graph: Map<T, T[]>, start: T): T[] {
+  const visited = new Set<T>();
+  const order: T[] = [];
+  function visit(node: T): void {
+    if (visited.has(node)) return;
+    visited.add(node);
+    order.push(node);
+    for (const neighbor of graph.get(node) ?? []) {
+      visit(neighbor);
+    }
+  }
+  visit(start);
+  return order;
+}
+---
+# Topological Sort — TypeScript patterns
+function topologicalSort(graph: Map<string, string[]>): string[] {
+  const visited = new Set<string>();
+  const result: string[] = [];
+  function visit(node: string): void {
+    if (visited.has(node)) return;
+    visited.add(node);
+    for (const dep of graph.get(node) ?? []) {
+      visit(dep);
+    }
+    result.push(node);
+  }
+  for (const node of graph.keys()) visit(node);
+  return result.reverse();
+}
+---
+# Fisher-Yates Shuffle — TypeScript patterns
+function shuffle<T>(arr: T[]): T[] {
+  const result = [...arr];
+  for (let i = result.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [result[i], result[j]] = [result[j], result[i]];
+  }
+  return result;
+}
+---
+# Readonly Tuple Type — TypeScript patterns
+type Point = readonly [number, number];
+type Point3D = readonly [number, number, number];
+
+function distance(a: Point, b: Point): number {
+  return Math.sqrt((a[0] - b[0]) ** 2 + (a[1] - b[1]) ** 2);
+}
+
+function add(a: Point3D, b: Point3D): Point3D {
+  return [a[0] + b[0], a[1] + b[1], a[2] + b[2]] as const;
+}
+---
+# Branded Type — TypeScript patterns
+type Brand<T, B extends string> = T & { readonly __brand: B };
+type USD = Brand<number, "USD">;
+type EUR = Brand<number, "EUR">;
+
+function usd(amount: number): USD { return amount as USD; }
+function eur(amount: number): EUR { return amount as EUR; }
+
+function addUSD(a: USD, b: USD): USD {
+  return (a + b) as USD;
+}
+---
+# Template Literal Types — TypeScript patterns
+type Color = "red" | "green" | "blue";
+type Size = "small" | "medium" | "large";
+type CSSClass = `${Size}-${Color}`;
+
+function applyStyle(element: HTMLElement, className: CSSClass): void {
+  element.classList.add(className);
+}
+---
+# Generic Async Queue — TypeScript patterns
+class AsyncQueue<T> {
+  private queue: T[] = [];
+  private resolvers: Array<(value: T) => void> = [];
+
+  enqueue(item: T): void {
+    if (this.resolvers.length > 0) {
+      const resolve = this.resolvers.shift()!;
+      resolve(item);
+    } else {
+      this.queue.push(item);
+    }
+  }
+
+  dequeue(): Promise<T> {
+    if (this.queue.length > 0) {
+      return Promise.resolve(this.queue.shift()!);
+    }
+    return new Promise((resolve) => this.resolvers.push(resolve));
+  }
+}
+---
+# Curried Function — TypeScript patterns
+function curry<A, B, C>(fn: (a: A, b: B) => C): (a: A) => (b: B) => C {
+  return (a: A) => (b: B) => fn(a, b);
+}
+
+const multiply = curry((x: number, y: number): number => x * y);
+const double = multiply(2);
+---
+# Type-Safe Object.keys — TypeScript patterns
+function typedKeys<T extends object>(obj: T): Array<keyof T> {
+  return Object.keys(obj) as Array<keyof T>;
+}
+
+function typedEntries<T extends object>(
+  obj: T
+): Array<[keyof T, T[keyof T]]> {
+  return Object.entries(obj) as Array<[keyof T, T[keyof T]]>;
+}
+---
+# Infer Return Type — TypeScript patterns
+type UnpackPromise<T> = T extends Promise<infer U> ? U : T;
+type UnpackArray<T> = T extends Array<infer U> ? U : T;
+
+type A = UnpackPromise<Promise<string>>;
+type B = UnpackArray<number[]>;
+
+function firstElement<T>(arr: readonly T[]): T | undefined {
+  return arr[0];
+}
+---
+# Generic Comparator Sort — TypeScript patterns
+type Comparator<T> = (a: T, b: T) => number;
+
+function sortBy<T>(arr: T[], comparator: Comparator<T>): T[] {
+  return [...arr].sort(comparator);
+}
+
+function descending<T extends number | string>(a: T, b: T): number {
+  return a < b ? 1 : a > b ? -1 : 0;
+}
+---
+# Readonly Class with Private Fields — TypeScript patterns
+class ImmutablePoint {
+  readonly #x: number;
+  readonly #y: number;
+
+  constructor(x: number, y: number) {
+    this.#x = x;
+    this.#y = y;
+  }
+
+  get x(): number { return this.#x; }
+  get y(): number { return this.#y; }
+
+  distanceTo(other: ImmutablePoint): number {
+    return Math.sqrt((this.#x - other.x) ** 2 + (this.#y - other.y) ** 2);
+  }
+}
+---
+# Generic State Machine — TypeScript patterns
+interface StateMachine<S extends string, E extends string> {
+  current: S;
+  transitions: Record<S, Partial<Record<E, S>>>;
+}
+
+function transition<S extends string, E extends string>(
+  machine: StateMachine<S, E>,
+  event: E
+): S {
+  const next = machine.transitions[machine.current][event];
+  if (next === undefined) throw new Error(`Invalid transition: ${event}`);
+  machine.current = next;
+  return next;
+}
+---
+# Intersection Types — TypeScript patterns
+interface HasName { name: string; }
+interface HasEmail { email: string; }
+interface HasAge { age: number; }
+
+type ContactInfo = HasName & HasEmail;
+type FullProfile = HasName & HasEmail & HasAge;
+
+function formatContact(contact: ContactInfo): string {
+  return `${contact.name} <${contact.email}>`;
+}
+---
+# Index Signature Pattern — TypeScript patterns
+interface StringMap<V> {
+  [key: string]: V | undefined;
+}
+
+function getOrDefault<V>(map: StringMap<V>, key: string, fallback: V): V {
+  return map[key] ?? fallback;
+}
+
+function mapValues<V, U>(obj: StringMap<V>, fn: (v: V) => U): StringMap<U> {
+  const result: StringMap<U> = {};
+  for (const [key, val] of Object.entries(obj)) {
+    if (val !== undefined) result[key] = fn(val);
+  }
+  return result;
+}
+---
+# Satisfies Operator Pattern — TypeScript patterns
+type Colors = Record<string, [number, number, number]>;
+
+const palette = {
+  red: [255, 0, 0],
+  green: [0, 255, 0],
+  blue: [0, 0, 255],
+} satisfies Colors;
+
+const redChannel = palette.red[0];
+---
+# Decorator Pattern — TypeScript patterns
+interface Logger {
+  log(message: string): void;
+}
+
+class ConsoleLogger implements Logger {
+  log(message: string): void { console.log(message); }
+}
+
+class TimestampLogger implements Logger {
+  constructor(private inner: Logger) {}
+  log(message: string): void {
+    this.inner.log(`[${new Date().toISOString()}] ${message}`);
+  }
+}
+---
+# Promise.all with Type Safety — TypeScript patterns
+async function fetchAll<T>(
+  fetchers: Array<() => Promise<T>>
+): Promise<T[]> {
+  return Promise.all(fetchers.map((fn) => fn()));
+}
+
+async function timeout<T>(promise: Promise<T>, ms: number): Promise<T> {
+  const timer = new Promise<never>((_, reject) =>
+    setTimeout(() => reject(new Error("Timeout")), ms)
+  );
+  return Promise.race([promise, timer]);
+}
+---
+# Binary to Decimal — TheAlgorithms/TypeScript
+function binaryToDecimal(binary: string): number {
+  let decimal = 0;
+  for (let i = 0; i < binary.length; i++) {
+    const bit = parseInt(binary[binary.length - 1 - i], 10);
+    decimal += bit * Math.pow(2, i);
+  }
+  return decimal;
+}
+---
+# Decimal to Binary — TheAlgorithms/TypeScript
+function decimalToBinary(num: number): string {
+  if (num === 0) return "0";
+  let binary = "";
+  let n = num;
+  while (n > 0) {
+    binary = (n % 2).toString() + binary;
+    n = Math.floor(n / 2);
+  }
+  return binary;
+}
