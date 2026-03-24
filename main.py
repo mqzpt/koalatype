@@ -27,6 +27,7 @@ JAVA_SNIPPETS_FILE = SNIPPETS_DIR / "java_snippets.txt"
 GO_SNIPPETS_FILE = SNIPPETS_DIR / "go_snippets.txt"
 RUST_SNIPPETS_FILE = SNIPPETS_DIR / "rust_snippets.txt"
 TS_SNIPPETS_FILE = SNIPPETS_DIR / "typescript_snippets.txt"
+QUOTES_FILE = SNIPPETS_DIR / "quotes.txt"
 
 
 @dataclass(frozen=True)
@@ -35,6 +36,8 @@ class WordPack:
     description: str
     words: tuple[str, ...]
     snippets: tuple[str, ...] = ()  # raw code strings with newlines
+    quotes: tuple[str, ...] = ()    # full sentences for quote mode
+    quote_authors: tuple[str, ...] = ()  # parallel to quotes: author names
 
 
 @dataclass(frozen=True)
@@ -78,6 +81,26 @@ def _load_snippets(path: Path) -> tuple[str, ...]:
         if code:
             snippets.append(code)
     return tuple(snippets)
+
+
+def _load_quotes_with_authors(path: Path) -> tuple[tuple[str, ...], tuple[str, ...]]:
+    """Load quotes file and return (quotes, authors) as parallel tuples."""
+    if not path.exists():
+        return (), ()
+    raw = path.read_text(encoding="utf-8")
+    quotes: list[str] = []
+    authors: list[str] = []
+    for block in raw.split("\n---\n"):
+        lines = block.strip().splitlines()
+        author = ""
+        if lines and lines[0].startswith("#"):
+            author = lines[0].lstrip("# ").strip()
+            lines = lines[1:]
+        text = "\n".join(lines).strip()
+        if text:
+            quotes.append(text)
+            authors.append(author)
+    return tuple(quotes), tuple(authors)
 
 
 def _parse_code_lines(code: str) -> list[CodeLine]:
@@ -285,6 +308,18 @@ def _build_word_packs() -> dict[str, WordPack]:
             words=tuple(ts_tokens),
             snippets=ts_snippets,
         )
+    loaded_quotes, loaded_authors = _load_quotes_with_authors(QUOTES_FILE)
+    if loaded_quotes:
+        all_quote_words: list[str] = []
+        for q in loaded_quotes:
+            all_quote_words.extend(q.split())
+        packs["quotes"] = WordPack(
+            name="quotes",
+            description=f"Famous quotes ({len(loaded_quotes)} quotes)",
+            words=tuple(all_quote_words),
+            quotes=loaded_quotes,
+            quote_authors=loaded_authors,
+        )
     return packs
 
 
@@ -438,7 +473,42 @@ def _generate_prompt(pack: WordPack, count: int, seed: int | None) -> str:
             if total_tokens >= count:
                 break
         return "\n\n".join(selected)
+    if pack.quotes:
+        indices = list(range(len(pack.quotes)))
+        rng.shuffle(indices)
+        selected_q: list[str] = []
+        total_words = 0
+        for idx in indices:
+            selected_q.append(pack.quotes[idx])
+            total_words += len(pack.quotes[idx].split())
+            if total_words >= count:
+                break
+        return " ".join(selected_q)
     return " ".join(rng.choices(pack.words, k=count))
+
+
+def _generate_quote_attributions(
+    pack: WordPack, count: int, seed: int | None
+) -> tuple[str, list[tuple[int, str]]]:
+    """Generate a quote prompt and return (prompt_text, [(word_offset, author), ...])."""
+    rng = random.Random(seed)
+    indices = list(range(len(pack.quotes)))
+    rng.shuffle(indices)
+    selected_texts: list[str] = []
+    attributions: list[tuple[int, str]] = []
+    word_offset = 0
+    total_words = 0
+    for idx in indices:
+        quote = pack.quotes[idx]
+        author = pack.quote_authors[idx] if idx < len(pack.quote_authors) else ""
+        attributions.append((word_offset, author))
+        selected_texts.append(quote)
+        qwords = len(quote.split())
+        word_offset += qwords
+        total_words += qwords
+        if total_words >= count:
+            break
+    return " ".join(selected_texts), attributions
 
 
 def _score(
@@ -613,7 +683,7 @@ def _show_splash(stdscr: curses.window) -> None:
 _MENU_MODES = [
     ("Words", "words", True),
     ("Code", "code", True),
-    ("Quotes", "quotes", False),
+    ("Quotes", "quotes", True),
     ("Multiplayer", "multiplayer", False),
 ]
 
@@ -751,13 +821,16 @@ def _run_interactive_setup(
                 return
 
             # --- Step 2: Language / Pack ---
-            if mode == "words":
-                lang_opts = _MENU_WORDS_LANGS
+            if mode == "quotes":
+                pack = "quotes"
             else:
-                lang_opts = _MENU_CODE_LANGS
-            pack = _curses_menu(stdscr, "Choose a language", lang_opts)
-            if pack is None:
-                continue  # back to mode
+                if mode == "words":
+                    lang_opts = _MENU_WORDS_LANGS
+                else:
+                    lang_opts = _MENU_CODE_LANGS
+                pack = _curses_menu(stdscr, "Choose a language", lang_opts)
+                if pack is None:
+                    continue  # back to mode
 
             # --- Step 3: Duration ---
             dur = _curses_menu(stdscr, "Choose a duration", _MENU_DURATIONS, default=1)
@@ -766,7 +839,7 @@ def _run_interactive_setup(
 
             zen = dur == 0
 
-            if mode == "words":
+            if mode in ("words", "quotes"):
                 # --- Step 4: Word count ---
                 wc = _curses_menu(
                     stdscr, "How many words?", _MENU_WORD_COUNTS, default=2
@@ -774,12 +847,15 @@ def _run_interactive_setup(
                 if wc is None:
                     continue
 
-                # --- Step 5: Difficulty ---
-                diff = _curses_menu(
-                    stdscr, "Choose difficulty", _MENU_DIFFICULTIES
-                )
-                if diff is None:
-                    continue
+                if mode == "words":
+                    # --- Step 5: Difficulty ---
+                    diff = _curses_menu(
+                        stdscr, "Choose difficulty", _MENU_DIFFICULTIES
+                    )
+                    if diff is None:
+                        continue
+                else:
+                    diff = "any"
             else:
                 wc = 30
                 diff = "any"
@@ -806,7 +882,8 @@ _ENTER_KEYS = ("\n", "\r", 10, 13)
 # ---------------------------------------------------------------------------
 
 def _run_curses_test(
-    prompt: str, duration_seconds: float, zen_mode: bool = False
+    prompt: str, duration_seconds: float, zen_mode: bool = False,
+    quote_attributions: list[tuple[int, str]] | None = None,
 ) -> tuple[str, float, TestStats]:
     result: dict[str, float | str] = {"typed": "", "elapsed": 0.0}
     stats = TestStats()
@@ -851,7 +928,17 @@ def _run_curses_test(
             pbar = _progress_bar(words_done, len(prompt_words), usable_width)
             stdscr.addstr(2, 0, pbar[: width - 1], curses.color_pair(4))
 
-            base_row = 4
+            if quote_attributions:
+                current_author = ""
+                for start_word, author in reversed(quote_attributions):
+                    if word_index >= start_word:
+                        current_author = author
+                        break
+                if current_author:
+                    attr_str = f"\u2014 {current_author}"
+                    stdscr.addstr(3, 0, attr_str[: width - 1], curses.A_DIM)
+
+            base_row = 5 if quote_attributions else 4
             max_lines = max(0, height - base_row - 2)
             for idx, line in enumerate(prompt_lines[:max_lines]):
                 stdscr.addstr(base_row + idx, 0, line)
@@ -1200,7 +1287,11 @@ def _run_test_loop(
     is_code = bool(pack.snippets)
 
     while True:
-        prompt = _generate_prompt(pack, word_count, seed)
+        attributions: list[tuple[int, str]] | None = None
+        if pack.quotes and pack.quote_authors:
+            prompt, attributions = _generate_quote_attributions(pack, word_count, seed)
+        else:
+            prompt = _generate_prompt(pack, word_count, seed)
 
         if is_code:
             typed, elapsed, test_stats = _run_code_test(
@@ -1208,7 +1299,8 @@ def _run_test_loop(
             )
         else:
             typed, elapsed, test_stats = _run_curses_test(
-                prompt, duration, zen_mode=zen
+                prompt, duration, zen_mode=zen,
+                quote_attributions=attributions,
             )
 
         results = _score(prompt, typed, elapsed, test_stats)

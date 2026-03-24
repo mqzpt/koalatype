@@ -2,7 +2,7 @@
 
 Offline CLI typing test. Pure Python, zero dependencies, runs in any terminal.
 
-Includes a **code mode** where you type real functions with proper indentation and line breaks — not just random keywords.
+Includes a **code mode** where you type real functions with proper indentation and line breaks — not just random keywords. Plus a **quote mode** with 189 famous quotes from programmers, scientists, and writers.
 
 ## Install
 
@@ -17,6 +17,7 @@ Requires Python 3.11+.
 ```bash
 koalatype                                    # interactive setup menu
 koalatype --pack python-code                 # real Python snippets with indentation
+koalatype --pack quotes --words 50           # type famous quotes
 koalatype --pack javascript-code --zen       # no timer, Esc when done
 koalatype --pack java-code --time 60         # 60 second test
 koalatype --pack rust-code --time 60         # real Rust code
@@ -48,6 +49,7 @@ Running `koalatype` with no arguments launches an interactive menu where you pic
 | `go` | Go keywords |
 | `go-code` | Real Go code — 101 snippets |
 | `sql` | SQL keywords |
+| `quotes` | Famous quotes — 189 quotes |
 
 `--difficulty easy/medium/hard` filters by word length (<=4, 5-7, 8+ chars). Works with any word pack.
 
@@ -74,6 +76,17 @@ def two_sum(nums, target):
 
 605 code snippets across six languages covering sorting, searching, dynamic programming, graph algorithms, data structures, and more.
 
+## Quote Mode
+
+Type famous quotes from programmers, scientists, and writers. Uses word-mode typing (no indentation). Quotes are selected whole so you always type complete thoughts.
+
+```bash
+koalatype --pack quotes                      # quotes with default settings
+koalatype --pack quotes --zen                # no timer, Esc when done
+```
+
+189 quotes from Dijkstra, Knuth, Torvalds, Turing, Ada Lovelace, Grace Hopper, and many more.
+
 ## Features
 
 - **Interactive setup** — run with no args to pick mode, language, and settings via a menu
@@ -98,7 +111,6 @@ difficulty = "medium"
 
 ## Future
 
-- Quote mode
 - Themes / color schemes
 - Multiplayer
 

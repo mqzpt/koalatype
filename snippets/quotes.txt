@@ -1,0 +1,566 @@
+# Edsger Dijkstra
+Simplicity is a great virtue but it requires hard work to achieve it and education to appreciate it.
+---
+# Edsger Dijkstra
+Computer science is no more about computers than astronomy is about telescopes.
+---
+# Edsger Dijkstra
+If debugging is the process of removing software bugs, then programming must be the process of putting them in.
+---
+# Edsger Dijkstra
+The question of whether a computer can think is no more interesting than the question of whether a submarine can swim.
+---
+# Edsger Dijkstra
+Program testing can be used to show the presence of bugs, but never to show their absence.
+---
+# Donald Knuth
+Premature optimization is the root of all evil.
+---
+# Donald Knuth
+The best programs are written so that computing machines can perform them quickly and so that human beings can understand them clearly.
+---
+# Donald Knuth
+Science is what we understand well enough to explain to a computer. Art is everything else we do.
+---
+# Donald Knuth
+Beware of bugs in the above code; I have only proved it correct, not tried it.
+---
+# Linus Torvalds
+Bad programmers worry about the code. Good programmers worry about data structures and their relationships.
+---
+# Linus Torvalds
+Most good programmers do programming not because they expect to get paid or get adulation by the public, but because it is fun to program.
+---
+# Linus Torvalds
+Software is like sex: it's better when it's free.
+---
+# Linus Torvalds
+Intelligence is the ability to avoid doing work, yet getting the work done.
+---
+# Alan Kay
+The best way to predict the future is to invent it.
+---
+# Alan Kay
+People who are really serious about software should make their own hardware.
+---
+# Alan Kay
+Simple things should be simple, complex things should be possible.
+---
+# Alan Kay
+Technology is anything that wasn't around when you were born.
+---
+# Fred Brooks
+Adding manpower to a late software project makes it later.
+---
+# Fred Brooks
+The programmer, like the poet, works only slightly removed from pure thought-stuff.
+---
+# Fred Brooks
+Plan to throw one away; you will, anyhow.
+---
+# Fred Brooks
+How does a project get to be a year late? One day at a time.
+---
+# Grace Hopper
+The most dangerous phrase in the language is, we have always done it this way.
+---
+# Grace Hopper
+A ship in port is safe, but that is not what ships are built for.
+---
+# Grace Hopper
+It is often easier to ask for forgiveness than to ask for permission.
+---
+# Ken Thompson
+One of my most productive days was throwing away a thousand lines of code.
+---
+# Tony Hoare
+There are two ways of constructing a software design: one way is to make it so simple that there are obviously no deficiencies, and the other way is to make it so complicated that there are no obvious deficiencies.
+---
+# Martin Fowler
+Any fool can write code that a computer can understand. Good programmers write code that humans can understand.
+---
+# Robert C. Martin
+Truth can only be found in one place: the code.
+---
+# Robert C. Martin
+Clean code always looks like it was written by someone who cares.
+---
+# Kent Beck
+Make it work, make it right, make it fast.
+---
+# Kent Beck
+I'm not a great programmer; I'm just a good programmer with great habits.
+---
+# Brian Kernighan
+Controlling complexity is the essence of computer programming.
+---
+# Brian Kernighan
+Everyone knows that debugging is twice as hard as writing a program in the first place.
+---
+# Jamie Zawinski
+Some people, when confronted with a problem, think I know, I will use regular expressions. Now they have two problems.
+---
+# Bill Gates
+Measuring programming progress by lines of code is like measuring aircraft building progress by weight.
+---
+# Bill Gates
+The advance of technology is based on making it fit in so that you don't really even notice it, so it's part of everyday life.
+---
+# Steve Jobs
+Design is not just what it looks like and feels like. Design is how it works.
+---
+# Steve Jobs
+The people who are crazy enough to think they can change the world are the ones who do.
+---
+# Steve Jobs
+Your time is limited, so don't waste it living someone else's life.
+---
+# Steve Jobs
+Innovation distinguishes between a leader and a follower.
+---
+# John Carmack
+Focused, hard work is the real key to success.
+---
+# Dennis Ritchie
+The only way to learn a new programming language is by writing programs in it.
+---
+# Bjarne Stroustrup
+There are only two kinds of languages: the ones people complain about and the ones nobody uses.
+---
+# Bjarne Stroustrup
+C makes it easy to shoot yourself in the foot; C++ makes it harder, but when you do it blows your whole leg off.
+---
+# Larry Wall
+The three chief virtues of a programmer are laziness, impatience, and hubris.
+---
+# Doug McIlroy
+The real hero of programming is the one who writes negative code.
+---
+# Albert Einstein
+Imagination is more important than knowledge. Knowledge is limited. Imagination encircles the world.
+---
+# Albert Einstein
+If you can't explain it simply, you don't understand it well enough.
+---
+# Albert Einstein
+Life is like riding a bicycle. To keep your balance, you must keep moving.
+---
+# Albert Einstein
+The important thing is not to stop questioning. Curiosity has its own reason for existing.
+---
+# Albert Einstein
+Logic will get you from A to B. Imagination will take you everywhere.
+---
+# Albert Einstein
+Strive not to be a success, but rather to be of value.
+---
+# Albert Einstein
+A person who never made a mistake never tried anything new.
+---
+# Richard Feynman
+The first principle is that you must not fool yourself, and you are the easiest person to fool.
+---
+# Richard Feynman
+I would rather have questions that can't be answered than answers that can't be questioned.
+---
+# Richard Feynman
+Study hard what interests you the most in the most undisciplined, irreverent and original manner possible.
+---
+# Richard Feynman
+What I cannot create, I do not understand.
+---
+# Richard Feynman
+It doesn't matter how beautiful your theory is. If it disagrees with experiment, it's wrong.
+---
+# Carl Sagan
+We live in a society exquisitely dependent on science and technology, in which hardly anyone knows anything about science and technology.
+---
+# Carl Sagan
+We are a way for the cosmos to know itself.
+---
+# Carl Sagan
+The nitrogen in our DNA, the calcium in our teeth, the iron in our blood, the carbon in our apple pies were made in the interiors of collapsing stars.
+---
+# Carl Sagan
+If you wish to make an apple pie from scratch, you must first invent the universe.
+---
+# Carl Sagan
+For small creatures such as we, the vastness is bearable only through love.
+---
+# Alan Turing
+Those who can imagine anything, can create the impossible.
+---
+# Alan Turing
+Sometimes it is the people no one can imagine anything of who do the things no one can imagine.
+---
+# Alan Turing
+We can only see a short distance ahead, but we can see plenty there that needs to be done.
+---
+# Marie Curie
+Nothing in life is to be feared, it is only to be understood. Now is the time to understand more, so that we may fear less.
+---
+# Marie Curie
+Be less curious about people and more curious about ideas.
+---
+# Marie Curie
+I was taught that the way of progress was neither swift nor easy.
+---
+# Isaac Newton
+If I have seen further, it is by standing on the shoulders of giants.
+---
+# Nikola Tesla
+The present is theirs; the future, for which I really worked, is mine.
+---
+# Nikola Tesla
+Our virtues and our failings are inseparable, like force and matter. When they separate, man is no more.
+---
+# Charles Darwin
+It is not the strongest of the species that survives, nor the most intelligent, but the one most responsive to change.
+---
+# Galileo Galilei
+All truths are easy to understand once they are discovered; the point is to discover them.
+---
+# Galileo Galilei
+You cannot teach a man anything; you can only help him find it within himself.
+---
+# Niels Bohr
+An expert is a person who has made all the mistakes that can be made in a very narrow field.
+---
+# Niels Bohr
+Prediction is very difficult, especially about the future.
+---
+# Werner Heisenberg
+Not only is the universe stranger than we think, it is stranger than we can think.
+---
+# Stephen Hawking
+However difficult life may seem, there is always something you can do and succeed at.
+---
+# Stephen Hawking
+Intelligence is the ability to adapt to change.
+---
+# Stephen Hawking
+The greatest enemy of knowledge is not ignorance, it is the illusion of knowledge.
+---
+# Seneca
+It is not that we have a short time to live, but that we waste a great deal of it.
+---
+# Seneca
+Luck is what happens when preparation meets opportunity.
+---
+# Seneca
+We suffer more often in imagination than in reality.
+---
+# Seneca
+Difficulties strengthen the mind, as labor does the body.
+---
+# Seneca
+It is not because things are difficult that we do not dare; it is because we do not dare that they are difficult.
+---
+# Seneca
+Begin at once to live, and count each separate day as a separate life.
+---
+# Marcus Aurelius
+The happiness of your life depends upon the quality of your thoughts.
+---
+# Marcus Aurelius
+Waste no more time arguing about what a good man should be. Be one.
+---
+# Marcus Aurelius
+You have power over your mind, not outside events. Realize this, and you will find strength.
+---
+# Marcus Aurelius
+Dwell on the beauty of life. Watch the stars, and see yourself running with them.
+---
+# Marcus Aurelius
+Very little is needed to make a happy life; it is all within yourself, in your way of thinking.
+---
+# Marcus Aurelius
+When you arise in the morning, think of what a privilege it is to be alive, to think, to enjoy, to love.
+---
+# Epictetus
+It's not what happens to you, but how you react to it that matters.
+---
+# Epictetus
+No man is free who is not master of himself.
+---
+# Epictetus
+First say to yourself what you would be; and then do what you have to do.
+---
+# Socrates
+The only true wisdom is in knowing you know nothing at all.
+---
+# Socrates
+To find yourself, think for yourself. Wonder is the beginning of wisdom.
+---
+# Aristotle
+We are what we repeatedly do. Excellence, then, is not an act, but a habit.
+---
+# Aristotle
+The more you know, the more you realize you don't know.
+---
+# Lao Tzu
+A journey of a thousand miles begins with a single step.
+---
+# Lao Tzu
+When I let go of what I am, I become what I might be.
+---
+# Confucius
+It does not matter how slowly you go as long as you do not stop.
+---
+# Confucius
+Our greatest glory is not in never falling, but in rising every time we fall.
+---
+# Ernest Hemingway
+There is nothing to writing. All you do is sit down at a typewriter and bleed.
+---
+# Ernest Hemingway
+The world breaks everyone, and afterward, many are strong at the broken places.
+---
+# Ernest Hemingway
+All you have to do is write one true sentence. Write the truest sentence that you know.
+---
+# Ernest Hemingway
+There is no friend as loyal as a book. It will wait for you faithfully.
+---
+# George Orwell
+In a time of deceit, telling the truth is a revolutionary act.
+---
+# George Orwell
+Who controls the past controls the future. Who controls the present controls the past.
+---
+# George Orwell
+If liberty means anything at all, it means the right to tell people what they do not want to hear.
+---
+# J.R.R. Tolkien
+A single dream is more powerful than a thousand realities.
+---
+# J.R.R. Tolkien
+All we have to decide is what to do with the time that is given us.
+---
+# J.R.R. Tolkien
+Even the smallest person can change the course of the future.
+---
+# Mark Twain
+The secret of getting ahead is getting started.
+---
+# Mark Twain
+Whenever you find yourself on the side of the majority, it is time to pause and reflect.
+---
+# Mark Twain
+The two most important days in your life are the day you are born and the day you find out why.
+---
+# Mark Twain
+A man who carries a cat by the tail learns something he can learn in no other way.
+---
+# Oscar Wilde
+A good friend will always stab you in the front, never the back.
+---
+# Oscar Wilde
+Experience is simply the name we give our mistakes.
+---
+# Oscar Wilde
+To live is the rarest thing in the world. Most people exist, that is all.
+---
+# Oscar Wilde
+The only way to get rid of a temptation is to yield to it.
+---
+# Ralph Waldo Emerson
+Do not go where the path may lead, go instead where there is no path and leave a trail.
+---
+# Ralph Waldo Emerson
+The only person you are destined to become is the person you decide to be.
+---
+# Ralph Waldo Emerson
+What lies behind us and what lies before us are tiny matters compared to what lies within us.
+---
+# William Shakespeare
+To thine own self be true, and it must follow, as the night the day, thou canst not then be false to any man.
+---
+# William Shakespeare
+There is nothing either good or bad, but thinking makes it so.
+---
+# William Shakespeare
+We know what we are, but know not what we may be.
+---
+# Franz Kafka
+A book must be the axe for the frozen sea within us.
+---
+# Virginia Woolf
+Lock up your libraries if you like, but there is no gate, no lock, no bolt that you can set upon the freedom of my mind.
+---
+# Virginia Woolf
+One cannot think well, love well, sleep well, if one has not dined well.
+---
+# Fyodor Dostoevsky
+The soul is healed by being with children.
+---
+# Fyodor Dostoevsky
+The degree of civilization in a society can be judged by entering its prisons.
+---
+# Victor Hugo
+Even the darkest night will end and the sun will rise.
+---
+# Victor Hugo
+He who opens a school door, closes a prison.
+---
+# Leo Tolstoy
+Everyone thinks of changing the world, but no one thinks of changing himself.
+---
+# Winston Churchill
+Success is not final, failure is not fatal: it is the courage to continue that counts.
+---
+# Winston Churchill
+We make a living by what we get, but we make a life by what we give.
+---
+# Winston Churchill
+The pessimist sees difficulty in every opportunity. The optimist sees opportunity in every difficulty.
+---
+# Winston Churchill
+If you are going through hell, keep going.
+---
+# Martin Luther King Jr.
+The time is always right to do what is right.
+---
+# Martin Luther King Jr.
+Darkness cannot drive out darkness; only light can do that. Hate cannot drive out hate; only love can do that.
+---
+# Martin Luther King Jr.
+The ultimate measure of a man is not where he stands in moments of comfort, but where he stands at times of challenge.
+---
+# Martin Luther King Jr.
+In the end, we will remember not the words of our enemies, but the silence of our friends.
+---
+# Abraham Lincoln
+The best way to predict your future is to create it.
+---
+# Abraham Lincoln
+Give me six hours to chop down a tree and I will spend the first four sharpening the axe.
+---
+# Abraham Lincoln
+Nearly all men can stand adversity, but if you want to test a man's character, give him power.
+---
+# Theodore Roosevelt
+Do what you can, with what you have, where you are.
+---
+# Theodore Roosevelt
+It is not the critic who counts, not the man who points out how the strong man stumbles.
+---
+# Mahatma Gandhi
+Be the change that you wish to see in the world.
+---
+# Mahatma Gandhi
+Live as if you were to die tomorrow. Learn as if you were to live forever.
+---
+# Nelson Mandela
+It always seems impossible until it is done.
+---
+# Nelson Mandela
+Education is the most powerful weapon which you can use to change the world.
+---
+# Helen Keller
+The only thing worse than being blind is having sight but no vision.
+---
+# Helen Keller
+Life is either a daring adventure or nothing at all.
+---
+# Maya Angelou
+We delight in the beauty of the butterfly, but rarely admit the changes it has gone through to achieve that beauty.
+---
+# Maya Angelou
+If you don't like something, change it. If you can't change it, change your attitude.
+---
+# Bruce Lee
+I fear not the man who has practiced ten thousand kicks once, but I fear the man who has practiced one kick ten thousand times.
+---
+# Bruce Lee
+Absorb what is useful, discard what is useless and add what is specifically your own.
+---
+# Bruce Lee
+Be water, my friend. Empty your mind. Be formless, shapeless, like water.
+---
+# Benjamin Franklin
+An investment in knowledge pays the best interest.
+---
+# Benjamin Franklin
+By failing to prepare, you are preparing to fail.
+---
+# Benjamin Franklin
+Tell me and I forget. Teach me and I remember. Involve me and I learn.
+---
+# Thomas Edison
+I have not failed. I've just found ten thousand ways that won't work.
+---
+# Thomas Edison
+Genius is one percent inspiration and ninety-nine percent perspiration.
+---
+# Thomas Edison
+Our greatest weakness lies in giving up. The most certain way to succeed is always to try just one more time.
+---
+# Leonardo da Vinci
+I have been impressed with the urgency of doing. Knowing is not enough; we must apply. Being willing is not enough; we must do.
+---
+# Leonardo da Vinci
+The noblest pleasure is the joy of understanding something for the first time.
+---
+# Leonardo da Vinci
+It had long since come to my attention that people of accomplishment rarely sat back and let things happen to them.
+---
+# Antoine de Saint-Exupery
+Perfection is achieved, not when there is nothing more to add, but when there is nothing left to take away.
+---
+# Voltaire
+The perfect is the enemy of the good.
+---
+# Voltaire
+Judge a man by his questions rather than by his answers.
+---
+# Blaise Pascal
+I would have written a shorter letter, but I did not have the time.
+---
+# Sun Tzu
+In the midst of chaos, there is also opportunity.
+---
+# Sun Tzu
+The supreme art of war is to subdue the enemy without fighting.
+---
+# Miyamoto Musashi
+Today is victory over yourself of yesterday; tomorrow is your victory over lesser men.
+---
+# Miyamoto Musashi
+There is nothing outside of yourself that can ever enable you to get better, stronger, richer, quicker, or smarter.
+---
+# John Wooden
+Things turn out best for the people who make the best of the way things turn out.
+---
+# Vince Lombardi
+Perfection is not attainable, but if we chase perfection we can catch excellence.
+---
+# Theodore Roosevelt
+In any moment of decision, the best thing you can do is the right thing. The worst thing you can do is nothing.
+---
+# Eleanor Roosevelt
+No one can make you feel inferior without your consent.
+---
+# Eleanor Roosevelt
+The future belongs to those who believe in the beauty of their dreams.
+---
+# Henry David Thoreau
+Go confidently in the direction of your dreams. Live the life you have imagined.
+---
+# Henry David Thoreau
+Our life is frittered away by detail. Simplify, simplify.
+---
+# Rainer Maria Rilke
+Perhaps all the dragons in our lives are princesses who are only waiting to see us act with beauty and courage.
+---
+# Arthur C. Clarke
+Any sufficiently advanced technology is indistinguishable from magic.
+---
+# Arthur C. Clarke
+The only way of discovering the limits of the possible is to venture a little way past them into the impossible.
+---
+# Isaac Asimov
+The saddest aspect of life right now is that science gathers knowledge faster than society gathers wisdom.
+---
+# Buckminster Fuller
+You never change things by fighting the existing reality. To change something, build a new model that makes the existing model obsolete.
